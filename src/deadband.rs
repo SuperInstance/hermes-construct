@@ -1,0 +1,227 @@
+//! deadband.rs — Deadband monitoring and trend detection
+//!
+//! A deadband monitors a value within [lower, upper] bounds.
+//! Trends: stable, drifting, oscillating, diverging.
+
+use rusqlite::{params, Connection};
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum Trend {
+    Stable,
+    Drifting,
+    Oscillating,
+    Diverging,
+}
+
+impl Trend {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::Stable => "stable",
+            Self::Drifting => "drifting",
+            Self::Oscillating => "oscillating",
+            Self::Diverging => "diverging",
+        }
+    }
+
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "stable" => Some(Self::Stable),
+            "drifting" => Some(Self::Drifting),
+            "oscillating" => Some(Self::Oscillating),
+            "diverging" => Some(Self::Diverging),
+            _ => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DeadbandState {
+    pub lower: f64,
+    pub upper: f64,
+    pub current: f64,
+    pub trend: Trend,
+    pub consecutive_breaches: u32,
+}
+
+impl DeadbandState {
+    pub fn new(lower: f64, upper: f64, current: f64) -> Self {
+        Self {
+            lower,
+            upper,
+            current,
+            trend: Trend::Stable,
+            consecutive_breaches: 0,
+        }
+    }
+
+    /// Check if current value is within the deadband
+    pub fn is_in_band(&self) -> bool {
+        self.current >= self.lower && self.current <= self.upper
+    }
+
+    /// Update the current value and detect trend
+    pub fn update(&mut self, new_value: f64) -> &Trend {
+        let delta = new_value - self.current;
+        let old_in_band = self.is_in_band();
+        self.current = new_value;
+
+        if self.is_in_band() {
+            self.consecutive_breaches = 0;
+            self.trend = Trend::Stable;
+        } else {
+            self.consecutive_breaches += 1;
+
+            // Detect trend
+            if self.consecutive_breaches > 10 {
+                self.trend = Trend::Diverging;
+            } else if self.consecutive_breaches > 5 {
+                self.trend = Trend::Oscillating;
+            } else {
+                self.trend = Trend::Drifting;
+            }
+        }
+
+        if !old_in_band && !self.is_in_band() && delta.abs() > (self.upper - self.lower) {
+            self.trend = Trend::Diverging;
+        }
+
+        &self.trend
+    }
+}
+
+/// Detect trend from a series of values
+pub fn detect_trend(values: &[f64]) -> Trend {
+    if values.len() < 3 {
+        return Trend::Stable;
+    }
+
+    let deltas: Vec<f64> = values.windows(2).map(|w| w[1] - w[0]).collect();
+
+    // Check for oscillation: alternating signs
+    let sign_changes: usize = deltas.windows(2)
+        .filter(|w| w[0].signum() != w[1].signum())
+        .count();
+
+    if sign_changes as f64 / (deltas.len() as f64 - 1.0) > 0.6 {
+        return Trend::Oscillating;
+    }
+
+    // Check for divergence: increasing magnitude
+    let increasing_magnitude: usize = deltas.windows(2)
+        .filter(|w| w[1].abs() > w[0].abs())
+        .count();
+
+    if increasing_magnitude as f64 / (deltas.len() as f64 - 1.0) > 0.7 {
+        return Trend::Diverging;
+    }
+
+    // Check for drift: consistent direction
+    let mean_delta: f64 = deltas.iter().sum::<f64>() / deltas.len() as f64;
+    if mean_delta.abs() > 0.01 {
+        return Trend::Drifting;
+    }
+
+    Trend::Stable
+}
+
+// ---------------------------------------------------------------------------
+// SQLite
+// ---------------------------------------------------------------------------
+
+pub fn init_schema(conn: &Connection) -> Result<(), rusqlite::Error> {
+    // Deadband state is stored as part of tile metadata
+    // We store deadband circuit configurations here
+    conn.execute_batch(
+        "CREATE TABLE IF NOT EXISTS deadband_circuits (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            room_id TEXT NOT NULL,
+            monitored_quantity TEXT NOT NULL,
+            setpoint REAL NOT NULL,
+            tolerance REAL NOT NULL,
+            action TEXT NOT NULL,
+            ensign_id TEXT,
+            check_interval INTEGER DEFAULT 30,
+            automation_level INTEGER DEFAULT 1,
+            last_value REAL,
+            consecutive_breaches INTEGER DEFAULT 0,
+            is_breached BOOLEAN DEFAULT 0,
+            created_tick INTEGER NOT NULL,
+            updated_tick INTEGER NOT NULL,
+            FOREIGN KEY (room_id) REFERENCES rooms(id)
+        );"
+    )
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DeadbandCircuit {
+    pub id: String,
+    pub name: String,
+    pub room_id: String,
+    pub monitored_quantity: String,
+    pub setpoint: f64,
+    pub tolerance: f64,
+    pub action: String,
+    pub ensign_id: Option<String>,
+    pub check_interval: u64,
+    pub automation_level: u32,
+    pub last_value: Option<f64>,
+    pub consecutive_breaches: u32,
+    pub is_breached: bool,
+    pub created_tick: u64,
+    pub updated_tick: u64,
+}
+
+impl DeadbandCircuit {
+    pub fn check(&mut self, current_value: f64) -> bool {
+        let lower = self.setpoint - self.tolerance;
+        let upper = self.setpoint + self.tolerance;
+
+        self.last_value = Some(current_value);
+        let in_band = current_value >= lower && current_value <= upper;
+
+        if !in_band {
+            self.consecutive_breaches += 1;
+            self.is_breached = true;
+        } else {
+            self.consecutive_breaches = 0;
+            self.is_breached = false;
+        }
+
+        !in_band
+    }
+}
+
+/// Run deadband checks for all circuits
+pub fn run_checks(conn: &Connection, tick: u64) -> Result<Vec<DeadbandCircuit>, rusqlite::Error> {
+    let mut stmt = conn.prepare(
+        "SELECT id, name, room_id, monitored_quantity, setpoint, tolerance,
+                action, ensign_id, check_interval, automation_level,
+                last_value, consecutive_breaches, is_breached,
+                created_tick, updated_tick
+         FROM deadband_circuits"
+    )?;
+
+    let circuits: Vec<DeadbandCircuit> = stmt.query_map([], |row| {
+        Ok(DeadbandCircuit {
+            id: row.get(0)?,
+            name: row.get(1)?,
+            room_id: row.get(2)?,
+            monitored_quantity: row.get(3)?,
+            setpoint: row.get(4)?,
+            tolerance: row.get(5)?,
+            action: row.get(6)?,
+            ensign_id: row.get(7)?,
+            check_interval: row.get::<_, i64>(8)? as u64,
+            automation_level: row.get::<_, i64>(9)? as u32,
+            last_value: row.get(10)?,
+            consecutive_breaches: row.get::<_, i64>(11)? as u32,
+            is_breached: row.get::<_, bool>(12)?,
+            created_tick: row.get::<_, i64>(13)? as u64,
+            updated_tick: row.get::<_, i64>(14)? as u64,
+        })
+    })?.filter_map(|r| r.ok()).collect();
+
+    Ok(circuits)
+}

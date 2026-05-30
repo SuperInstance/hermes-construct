@@ -1,0 +1,8 @@
+{
+  "id": "navigation",
+  "type": "navigation",
+  "gravity": -0.3,
+  "gravity_confidence": 0.5,
+  "deadband_tolerance": 0.05,
+  "ensign_id": "seed-nav-01"
+}

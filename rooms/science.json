@@ -1,0 +1,7 @@
+{
+  "id": "science",
+  "type": "science",
+  "gravity": 0.0,
+  "gravity_confidence": 0.3,
+  "deadband_tolerance": 0.08
+}

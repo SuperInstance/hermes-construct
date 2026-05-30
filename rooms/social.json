@@ -1,0 +1,7 @@
+{
+  "id": "social",
+  "type": "social",
+  "gravity": 0.5,
+  "gravity_confidence": 0.6,
+  "deadband_tolerance": 0.15
+}

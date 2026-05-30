@@ -1,0 +1,7 @@
+{
+  "id": "engineering",
+  "type": "engineering",
+  "gravity": -0.6,
+  "gravity_confidence": 0.4,
+  "deadband_tolerance": 0.10
+}
