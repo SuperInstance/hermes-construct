@@ -22,6 +22,77 @@ fn sql_err(e: rusqlite::Error) -> String {
 }
 
 // ---------------------------------------------------------------------------
+// Conservation degradation
+// ---------------------------------------------------------------------------
+
+/// Below this much remaining budget we throttle params and switch to the
+/// cheapest provider. Above it, full gravity-derived params are used.
+const BUDGET_SOFT_FLOOR: f64 = 100.0;
+/// Below this we stop calling providers entirely and refuse gracefully.
+const BUDGET_HARD_FLOOR: f64 = 10.0;
+
+/// How the kernel handles a message given the remaining conservation budget.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum DegradeMode {
+    /// Plenty of budget — honor the room's gravity-derived params.
+    Full,
+    /// Low budget — clamp tokens, force precise/cheap, prefer cheapest provider.
+    Throttled,
+    /// Out of budget — no API call; refuse honestly and escalate the tile.
+    Floor,
+}
+
+// ---------------------------------------------------------------------------
+// Provenance — chain-of-custody for every decision (recorded, no new file)
+// ---------------------------------------------------------------------------
+
+/// One provenance entry: who produced a tile, with what model/params, at what
+/// cost, and which decision the kernel made (normal / throttled / floor-refusal).
+struct ProvenanceEntry {
+    id: String,
+    tile_id: String,
+    ensign_id: String,
+    model: String,
+    provider: String,
+    prompt_style: String,
+    temperature: f64,
+    tokens_used: u32,
+    conservation_cost: f64,
+    room_id: String,
+    tick: u64,
+    parent_provenance: Option<String>,
+    decision: String,
+    is_valid: bool,
+}
+
+fn record_provenance(conn: &Connection, p: &ProvenanceEntry) -> Result<(), rusqlite::Error> {
+    conn.execute(
+        "INSERT INTO provenance
+            (id, tile_id, ensign_id, model, provider, prompt_style, temperature,
+             tokens_used, conservation_cost, room_id, tick, parent_provenance,
+             decision, is_valid)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)",
+        rusqlite::params![
+            p.id,
+            p.tile_id,
+            p.ensign_id,
+            p.model,
+            p.provider,
+            p.prompt_style,
+            p.temperature,
+            p.tokens_used as i64,
+            p.conservation_cost,
+            p.room_id,
+            p.tick as i64,
+            p.parent_provenance,
+            p.decision,
+            p.is_valid,
+        ],
+    )?;
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
 // ShellKernel
 // ---------------------------------------------------------------------------
 
@@ -56,6 +127,30 @@ impl ShellKernel {
         penrose::init_schema(&conn).map_err(sql_err)?;
         deadband::init_schema(&conn).map_err(sql_err)?;
 
+        // Provenance: chain-of-custody for every decision the kernel makes.
+        // (Lives here as wiring rather than a separate module/file.)
+        conn.execute_batch(
+            "CREATE TABLE IF NOT EXISTS provenance (
+                id TEXT PRIMARY KEY,
+                tile_id TEXT NOT NULL,
+                ensign_id TEXT,
+                model TEXT NOT NULL,
+                provider TEXT NOT NULL,
+                prompt_style TEXT,
+                temperature REAL,
+                tokens_used INTEGER,
+                conservation_cost REAL,
+                room_id TEXT,
+                tick INTEGER,
+                parent_provenance TEXT,
+                decision TEXT,
+                is_valid BOOLEAN DEFAULT 1
+            );
+            CREATE INDEX IF NOT EXISTS idx_prov_tile ON provenance(tile_id);
+            CREATE INDEX IF NOT EXISTS idx_prov_room ON provenance(room_id);",
+        )
+        .map_err(|e| format!("provenance init: {}", e))?;
+
         // Shell metadata
         conn.execute_batch(
             "CREATE TABLE IF NOT EXISTS shell_meta (
@@ -75,8 +170,22 @@ impl ShellKernel {
         log::info!("Loaded {} rooms from {}", rooms.len(), rooms_dir);
 
         // Load ensigns from JSON
-        let ensigns = ensign::load_ensigns_from_dir(&conn, ensigns_dir)?;
+        let mut ensigns = ensign::load_ensigns_from_dir(&conn, ensigns_dir)?;
         log::info!("Loaded {} ensigns from {}", ensigns.len(), ensigns_dir);
+
+        // Bind ensigns to their rooms. Rooms reference an ensign via `ensign_id`,
+        // but ensigns load without a `room_id`, so get_ensign_for_room() (which
+        // queries ensigns.room_id) would never match. Back-fill the link here so
+        // the ensign lifecycle can actually resolve and fire per room.
+        for r in &rooms {
+            if let Some(eid) = &r.ensign_id {
+                if let Some(e) = ensigns.iter_mut().find(|e| &e.id == eid) {
+                    e.room_id = Some(r.id.clone());
+                    ensign::upsert_ensign(&conn, e).map_err(sql_err)?;
+                    log::info!("Bound ensign {} to room {}", e.id, r.id);
+                }
+            }
+        }
 
         // Load conservation state
         let mut cons_state = conservation::load_state(&conn).map_err(sql_err)?;
@@ -109,17 +218,48 @@ impl ShellKernel {
         self.ports.push(port);
     }
 
-    /// Process an incoming message through the full pipeline
+    /// Pick the cheapest available provider for degraded operation.
+    /// DeepInfra (Seed-mini class) is treated as the low-cost default;
+    /// otherwise fall back to whatever provider is registered first.
+    fn cheapest_provider(&self) -> Option<String> {
+        if self.providers.iter().any(|(n, _)| n == "deepinfra") {
+            Some("deepinfra".to_string())
+        } else {
+            self.providers.first().map(|(n, _)| n.clone())
+        }
+    }
+
+    /// Process an incoming message through the full pipeline.
+    ///
+    /// Steps: observe -> route -> drive ensign lifecycle -> derive (and possibly
+    /// degrade) params -> provide-or-refuse -> tiles -> gravity -> provenance ->
+    /// reply -> persist. Low budget degrades behavior; it never aborts the loop.
     pub async fn process_message(&self, msg: &PortMessage) -> Result<(), String> {
         let tick = conservation::advance_tick();
 
-        // 1. Create observation tile
+        // 0. Decide degradation mode from remaining budget, up front.
+        let remaining = { self.conservation.lock().await.remaining() };
+        let mode = if remaining <= BUDGET_HARD_FLOOR {
+            DegradeMode::Floor
+        } else if remaining <= BUDGET_SOFT_FLOOR {
+            DegradeMode::Throttled
+        } else {
+            DegradeMode::Full
+        };
+        if mode != DegradeMode::Full {
+            log::warn!(
+                "conservation low (remaining={:.2}) — degrading to {:?}",
+                remaining, mode
+            );
+        }
+
+        // 1. Observation tile. Spends are best-effort: at the floor we still
+        //    record what happened rather than aborting the message.
         let mut obs_tile = Tile::new(TileType::Observation, &msg.text, tick);
         obs_tile.conservation_delta = costs::TILE_CREATE;
-
         {
             let mut cons = self.conservation.lock().await;
-            cons.spend(costs::TILE_CREATE)?;
+            let _ = cons.spend(costs::TILE_CREATE);
             cons.tick = tick;
         }
 
@@ -128,100 +268,185 @@ impl ShellKernel {
             let db = self.db.lock().await;
             room::route_to_room(&db, &msg.text).map_err(sql_err)?
         };
-
         let room_id = room.as_ref().map(|r| r.id.clone())
             .unwrap_or_else(|| "default".to_string());
-
         obs_tile.room_id = Some(room_id.clone());
 
-        // 3. Get ensign for room
-        let ensign_info = {
+        // 3. Get the room's ensign and drive its lifecycle (wake -> handle this
+        //    tick). A Dormant ensign is woken, oriented and brought to yellow
+        //    alert so it can_handle() the message immediately. At the floor we
+        //    leave the ensign asleep — there is no budget to spin it up.
+        let mut ensign_info = {
             let db = self.db.lock().await;
             ensign::get_ensign_for_room(&db, &room_id).map_err(sql_err)?
         };
+        if mode != DegradeMode::Floor {
+            if let Some(ref mut e) = ensign_info {
+                if !e.can_handle() {
+                    e.wake();
+                    e.orient();
+                    e.go_yellow();
+                    e.record_call(costs::ENSIGN_ACTIVATE);
+                    {
+                        let mut cons = self.conservation.lock().await;
+                        let _ = cons.spend(costs::ENSIGN_ACTIVATE);
+                    }
+                    let db = self.db.lock().await;
+                    let _ = ensign::upsert_ensign(&db, e);
+                }
+            }
+        }
 
-        // 4. Determine model params from room gravity
-        let model_params = room.as_ref()
+        // 4. Derive model params from room gravity, then apply degradation.
+        let mut model_params = room.as_ref()
             .map(|r| r.model_params())
             .unwrap_or_else(|| gravity::gravity_to_params(0.0));
 
-        // 5. Find provider and model
-        let model_name = ensign_info.as_ref()
+        let mut model_name = ensign_info.as_ref()
             .map(|e| e.model_name.clone())
             .unwrap_or_else(|| "seed-2.0-mini".to_string());
-
-        let provider_name = ensign_info.as_ref()
+        let mut provider_name = ensign_info.as_ref()
             .map(|e| e.provider.clone())
             .unwrap_or_else(|| "deepinfra".to_string());
 
+        if mode == DegradeMode::Throttled {
+            // Clamp tokens, force precise/cheap sampling, prefer cheapest provider.
+            model_params.max_tokens = model_params.max_tokens.min(256);
+            model_params.temperature = 0.3;
+            model_params.top_p = 0.9;
+            model_params.prompt_style = "precise".to_string();
+            if let Some(cheap) = self.cheapest_provider() {
+                if cheap != provider_name {
+                    provider_name = cheap;
+                    model_name = "seed-2.0-mini".to_string();
+                }
+            }
+        }
+
         let system_prompt = gravity::style_to_system_prompt(&model_params.prompt_style);
 
-        // 6. Call API
-        let completion_result = {
-            let provider = self.providers.iter()
-                .find(|(n, _)| n == &provider_name)
-                .map(|(_, p)| p.as_ref());
-
-            match provider {
-                Some(p) => {
-                    let request = CompletionRequest {
-                        prompt: msg.text.clone(),
-                        model: model_name.clone(),
-                        params: model_params.clone(),
-                        system_prompt: Some(system_prompt),
-                    };
-                    p.complete(&request).await
+        // 5. Produce a response: refuse at the floor, otherwise call the provider.
+        let (response_text, tokens_used, model_used, decision): (String, u32, String, &str) =
+            if mode == DegradeMode::Floor {
+                (
+                    "I'm running low on energy budget and need to pause new work. \
+                     Please try again once the budget is replenished.".to_string(),
+                    0,
+                    "none".to_string(),
+                    "floor-refusal",
+                )
+            } else {
+                let completion_result = {
+                    let provider = self.providers.iter()
+                        .find(|(n, _)| n == &provider_name)
+                        .map(|(_, p)| p.as_ref());
+                    match provider {
+                        Some(p) => {
+                            let request = CompletionRequest {
+                                prompt: msg.text.clone(),
+                                model: model_name.clone(),
+                                params: model_params.clone(),
+                                system_prompt: Some(system_prompt),
+                            };
+                            p.complete(&request).await
+                        }
+                        None => Err(format!("no provider '{}' available", provider_name)),
+                    }
+                };
+                match completion_result {
+                    Ok(resp) => (
+                        resp.text.clone(),
+                        resp.tokens_used,
+                        resp.model.clone(),
+                        if mode == DegradeMode::Throttled { "throttled" } else { "normal" },
+                    ),
+                    Err(e) => {
+                        log::error!("completion error: {}", e);
+                        (
+                            "I encountered an error processing your request.".to_string(),
+                            0,
+                            "none".to_string(),
+                            "error",
+                        )
+                    }
                 }
-                None => Err(format!("no provider '{}' available", provider_name)),
-            }
-        };
+            };
 
-        // 7. Create action tile
-        let (response_text, tokens_used, model_used) = match completion_result {
-            Ok(resp) => (resp.text.clone(), resp.tokens_used, resp.model.clone()),
-            Err(e) => {
-                log::error!("completion error: {}", e);
-                ("I encountered an error processing your request.".to_string(), 0, "none".to_string())
-            }
-        };
-
+        // 6. Action tile.
         let mut action_tile = Tile::new(TileType::Action, &response_text, tick);
         action_tile.room_id = Some(room_id.clone());
         action_tile.parent_id = Some(obs_tile.id.clone());
-        action_tile.model_used = Some(model_used);
+        action_tile.model_used = Some(model_used.clone());
         action_tile.tokens_used = tokens_used;
         action_tile.ensign_id = ensign_info.as_ref().map(|e| e.id.clone());
-
+        let action_cost = costs::TILE_CREATE + costs::ENSIGN_TILE;
+        action_tile.conservation_delta = action_cost;
+        if mode == DegradeMode::Floor {
+            action_tile.escalate("conservation budget floor reached", tick);
+        }
         {
             let mut cons = self.conservation.lock().await;
-            let _ = cons.spend(costs::TILE_CREATE + costs::ENSIGN_TILE);
+            let _ = cons.spend(action_cost);
         }
 
-        // 8. Update room gravity
+        // 7. Charge the ensign for a real provider hit, and persist its energy.
+        if tokens_used > 0 {
+            if let Some(ref mut e) = ensign_info {
+                e.record_call(costs::ENSIGN_TILE);
+                let db = self.db.lock().await;
+                let _ = ensign::upsert_ensign(&db, e);
+            }
+        }
+
+        // 8. Update room gravity from the interaction signal.
         if let Some(ref room) = room {
             let signal = if tokens_used > 0 { 0.05 } else { -0.05 };
             let mut updated_room = room.clone();
             updated_room.nudge_gravity(signal, 0.1, tick);
-
-            let db = self.db.lock().await;
-            let _ = room::upsert_room(&db, &updated_room).map_err(sql_err);
-
-            // Track gravity history
+            {
+                let db = self.db.lock().await;
+                let _ = room::upsert_room(&db, &updated_room).map_err(sql_err);
+            }
             let mut gh = self.gravity_history.lock().await;
             gh.entry(room.id.clone())
                 .or_default()
                 .push(updated_room.gravity);
         }
 
-        // 9. Persist tiles
+        // 9. Persist tiles + a provenance entry for the decision made.
         {
             let db = self.db.lock().await;
             let _ = tile::insert_tile(&db, &obs_tile);
-            action_tile.complete(tick);
+            // A floor-refusal tile is already escalated; don't overwrite that
+            // status with Complete.
+            if mode != DegradeMode::Floor {
+                action_tile.complete(tick);
+            }
             let _ = tile::insert_tile(&db, &action_tile);
+
+            let prov = ProvenanceEntry {
+                id: uuid::Uuid::new_v4().to_string(),
+                tile_id: action_tile.id.clone(),
+                ensign_id: ensign_info.as_ref().map(|e| e.id.clone())
+                    .unwrap_or_else(|| "unassigned".to_string()),
+                model: model_used.clone(),
+                provider: if tokens_used > 0 { provider_name.clone() } else { "none".to_string() },
+                prompt_style: model_params.prompt_style.clone(),
+                temperature: model_params.temperature,
+                tokens_used,
+                conservation_cost: action_cost,
+                room_id: room_id.clone(),
+                tick,
+                parent_provenance: Some(obs_tile.id.clone()),
+                decision: decision.to_string(),
+                is_valid: true,
+            };
+            if let Err(e) = record_provenance(&db, &prov) {
+                log::error!("provenance record error: {}", e);
+            }
         }
 
-        // 10. Send response
+        // 10. Send response over active ports.
         for port in &self.ports {
             let p = port.lock().await;
             if p.is_active() {
@@ -233,7 +458,7 @@ impl ShellKernel {
             }
         }
 
-        // 11. Save conservation state
+        // 11. Persist conservation state.
         {
             let db = self.db.lock().await;
             let cons = self.conservation.lock().await;
@@ -298,7 +523,59 @@ impl ShellKernel {
         Ok(())
     }
 
-    /// Run the main event loop
+    /// Drain each port once and process any pending messages, then yield
+    /// briefly. The short sleep keeps the loop calm (no busy-spin) and lets the
+    /// Ctrl+C branch in `run()` win the `select!` instead of being starved.
+    async fn poll_ports(&self) {
+        for port in &self.ports {
+            let p = port.lock().await;
+            if let Some(msg) = p.receive().await {
+                drop(p);
+                if let Err(e) = self.process_message(&msg).await {
+                    log::error!("message processing error: {}", e);
+                }
+            }
+        }
+        tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+    }
+
+    /// Graceful shutdown: stand down every ensign, persist conservation state,
+    /// and checkpoint the WAL so SQLite closes cleanly on drop.
+    pub async fn shutdown(&self) -> Result<(), String> {
+        log::info!("Standing down ensigns and saving state...");
+        let db = self.db.lock().await;
+
+        match ensign::get_all_ensigns(&db) {
+            Ok(ensigns) => {
+                for mut e in ensigns {
+                    e.stand_down();
+                    let _ = ensign::upsert_ensign(&db, &e);
+                }
+            }
+            Err(e) => log::error!("stand-down: could not load ensigns: {}", e),
+        }
+
+        {
+            let cons = self.conservation.lock().await;
+            if let Err(e) = conservation::save_state(&db, &cons) {
+                log::error!("shutdown: save conservation: {}", e);
+            }
+            log::info!(
+                "Final conservation: used={:.2} / budget={:.2} ({:.2} remaining)",
+                cons.used, cons.budget, cons.remaining()
+            );
+        }
+
+        // Fold the WAL back into the main db file so nothing is lost on close.
+        if let Err(e) = db.execute_batch("PRAGMA wal_checkpoint(TRUNCATE);") {
+            log::error!("shutdown: wal checkpoint: {}", e);
+        }
+
+        log::info!("Shutdown complete.");
+        Ok(())
+    }
+
+    /// Run the main event loop until Ctrl+C, then shut down gracefully.
     pub async fn run(&self) -> Result<(), String> {
         log::info!("Hermes Construct kernel starting...");
 
@@ -308,26 +585,24 @@ impl ShellKernel {
 
         loop {
             tokio::select! {
-                // Poll ports for messages
-                _ = async {
-                    for port in &self.ports {
-                        let p = port.lock().await;
-                        if let Some(msg) = p.receive().await {
-                            drop(p);
-                            if let Err(e) = self.process_message(&msg).await {
-                                log::error!("message processing error: {}", e);
-                            }
-                        }
-                    }
-                } => {}
+                // Graceful shutdown on Ctrl+C.
+                _ = tokio::signal::ctrl_c() => {
+                    log::info!("Ctrl+C received — shutting down gracefully...");
+                    break;
+                }
 
-                // Background tick
+                // Background tick: gravity decay, correlations, deadbands.
                 _ = tick_interval.tick() => {
                     if let Err(e) = self.background_tick().await {
                         log::error!("background tick error: {}", e);
                     }
                 }
+
+                // Poll ports for incoming messages.
+                _ = self.poll_ports() => {}
             }
         }
+
+        self.shutdown().await
     }
 }

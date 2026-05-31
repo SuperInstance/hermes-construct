@@ -120,6 +120,32 @@ async fn main() {
         log::warn!("TELEGRAM_BOT_TOKEN not set, using stdio port");
         let stdio_port = Arc::new(Mutex::new(port::StdioPort::new()));
         kernel.add_port(stdio_port.clone());
+
+        // Feed stdin lines into the stdio port so the loop has local input.
+        let stdin_port = stdio_port.clone();
+        tokio::spawn(async move {
+            use tokio::io::AsyncBufReadExt;
+            let reader = tokio::io::BufReader::new(tokio::io::stdin());
+            let mut lines = reader.lines();
+            log::info!("stdio port ready — type a message and press Enter (Ctrl+C to quit).");
+            while let Ok(Some(line)) = lines.next_line().await {
+                let text = line.trim().to_string();
+                if text.is_empty() {
+                    continue;
+                }
+                let port_msg = PortMessage {
+                    id: uuid::Uuid::new_v4().to_string(),
+                    text,
+                    chat_id: 0,
+                    from_user: Some("stdio".to_string()),
+                    timestamp: std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap_or_default()
+                        .as_secs(),
+                };
+                stdin_port.lock().await.push_message(port_msg).await;
+            }
+        });
     }
 
     log::info!("Hermes Construct v0.1 running. Ctrl+C to stop.");

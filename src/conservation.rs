@@ -89,15 +89,18 @@ pub fn init_schema(conn: &Connection) -> Result<(), rusqlite::Error> {
 
 /// Load conservation state from SQLite
 pub fn load_state(conn: &Connection) -> Result<ConservationState, rusqlite::Error> {
+    // Values are stored as TEXT (see init_schema / save_state), so they must be
+    // parsed from a String — reading them straight into f64 fails the type
+    // coercion and silently falls back to the default, losing all persistence.
     let budget: f64 = conn
         .query_row("SELECT value FROM conservation WHERE key = 'budget'", [], |r| {
-            r.get(0)
+            r.get::<_, String>(0).map(|s| s.parse().unwrap_or(10000.0))
         })
         .unwrap_or(10000.0);
 
     let used: f64 = conn
         .query_row("SELECT value FROM conservation WHERE key = 'used'", [], |r| {
-            r.get(0)
+            r.get::<_, String>(0).map(|s| s.parse().unwrap_or(0.0))
         })
         .unwrap_or(0.0);
 
