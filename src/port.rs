@@ -5,6 +5,7 @@
 
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
@@ -49,7 +50,11 @@ pub trait Port: Send + Sync {
 pub struct TelegramPort {
     bot: Bot,
     incoming: Arc<Mutex<Vec<PortMessage>>>,
-    active: Arc<Mutex<bool>>,
+    // A simple liveness flag. Kept as an atomic (not a tokio Mutex) so it can be
+    // read lock-free from the sync `is_active()` — reaching for `blocking_lock()`
+    // inside the async runtime risks a deadlock (and panics on a current-thread
+    // runtime).
+    active: Arc<AtomicBool>,
 }
 
 impl TelegramPort {
@@ -58,8 +63,13 @@ impl TelegramPort {
         Self {
             bot,
             incoming: Arc::new(Mutex::new(Vec::new())),
-            active: Arc::new(Mutex::new(true)),
+            active: Arc::new(AtomicBool::new(true)),
         }
+    }
+
+    /// Mark the port active/inactive (lock-free, callable from any context).
+    pub fn set_active(&self, active: bool) {
+        self.active.store(active, Ordering::Relaxed);
     }
 
     /// Push a message into the incoming queue
@@ -99,7 +109,7 @@ impl Port for TelegramPort {
     }
 
     fn is_active(&self) -> bool {
-        *self.active.blocking_lock()
+        self.active.load(Ordering::Relaxed)
     }
 }
 
