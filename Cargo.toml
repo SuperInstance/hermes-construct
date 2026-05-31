@@ -8,6 +8,26 @@ description = "Hermes Construct — tile-operating shell kernel for Oracle ARM"
 name = "hermes-construct"
 path = "src/main.rs"
 
+[[example]]
+name = "basic_agent"
+path = "examples/basic_agent.rs"
+
+[[example]]
+name = "sandbox_demo"
+path = "examples/sandbox_demo.rs"
+
+[[example]]
+name = "correlation_demo"
+path = "examples/correlation_demo.rs"
+
+[[example]]
+name = "provenance_demo"
+path = "examples/provenance_demo.rs"
+
+[[example]]
+name = "circuit_demo"
+path = "examples/circuit_demo.rs"
+
 [dependencies]
 tokio = { version = "1", features = ["full"] }
 rusqlite = { version = "0.31", features = ["bundled"] }
