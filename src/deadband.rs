@@ -176,12 +176,24 @@ pub struct DeadbandCircuit {
 }
 
 impl DeadbandCircuit {
+    /// Check if current value is within the relative deadband.
+    ///
+    /// Uses **relative** tolerance: `|current - setpoint| / |setpoint| < tolerance`.
+    /// This correctly handles large setpoint values (e.g. setpoint=10000 with
+    /// tolerance=0.05 means ±500, not ±0.05).
+    ///
+    /// Edge case: when setpoint is zero, falls back to absolute comparison
+    /// (|current| < tolerance) to avoid division by zero.
     pub fn check(&mut self, current_value: f64) -> bool {
-        let lower = self.setpoint - self.tolerance;
-        let upper = self.setpoint + self.tolerance;
-
         self.last_value = Some(current_value);
-        let in_band = current_value >= lower && current_value <= upper;
+
+        let in_band = if self.setpoint.abs() < f64::EPSILON {
+            // When setpoint ≈ 0, use absolute tolerance
+            current_value.abs() < self.tolerance
+        } else {
+            // Relative tolerance: |current - setpoint| / |setpoint| < tolerance
+            ((current_value - self.setpoint).abs() / self.setpoint.abs()) < self.tolerance
+        };
 
         if !in_band {
             self.consecutive_breaches += 1;
@@ -310,11 +322,12 @@ mod tests {
     fn circuit_check_in_band() {
         let mut c = DeadbandCircuit {
             id: "c1".into(), name: "test".into(), room_id: "r1".into(),
-            monitored_quantity: "temp".into(), setpoint: 50.0, tolerance: 5.0,
+            monitored_quantity: "temp".into(), setpoint: 50.0, tolerance: 0.1,
             action: "alert".into(), ensign_id: None, check_interval: 30,
             automation_level: 1, last_value: None, consecutive_breaches: 0,
             is_breached: false, created_tick: 0, updated_tick: 0,
         };
+        // 48.0 is within 10% of 50.0 (|48-50|/|50| = 0.04 < 0.1)
         assert!(!c.check(48.0)); // in band, not breached
         assert!(!c.is_breached);
     }
@@ -323,13 +336,44 @@ mod tests {
     fn circuit_check_out_of_band() {
         let mut c = DeadbandCircuit {
             id: "c1".into(), name: "test".into(), room_id: "r1".into(),
-            monitored_quantity: "temp".into(), setpoint: 50.0, tolerance: 5.0,
+            monitored_quantity: "temp".into(), setpoint: 50.0, tolerance: 0.1,
             action: "alert".into(), ensign_id: None, check_interval: 30,
             automation_level: 1, last_value: None, consecutive_breaches: 0,
             is_breached: false, created_tick: 0, updated_tick: 0,
         };
+        // 60.0 is outside 10% of 50.0 (|60-50|/|50| = 0.2 > 0.1)
         assert!(c.check(60.0)); // breach
         assert!(c.is_breached);
         assert_eq!(c.consecutive_breaches, 1);
+    }
+
+    #[test]
+    fn circuit_check_relative_tolerance_large_values() {
+        let mut c = DeadbandCircuit {
+            id: "c1".into(), name: "test".into(), room_id: "r1".into(),
+            monitored_quantity: "budget".into(), setpoint: 10000.0, tolerance: 0.05,
+            action: "alert".into(), ensign_id: None, check_interval: 30,
+            automation_level: 1, last_value: None, consecutive_breaches: 0,
+            is_breached: false, created_tick: 0, updated_tick: 0,
+        };
+        // 9600 is within 5% of 10000 (|9600-10000|/10000 = 0.04 < 0.05)
+        assert!(!c.check(9600.0));
+        // 9000 is outside 5% (|9000-10000|/10000 = 0.10 > 0.05)
+        assert!(c.check(9000.0));
+    }
+
+    #[test]
+    fn circuit_check_zero_setpoint_uses_absolute() {
+        let mut c = DeadbandCircuit {
+            id: "c1".into(), name: "test".into(), room_id: "r1".into(),
+            monitored_quantity: "error".into(), setpoint: 0.0, tolerance: 0.5,
+            action: "alert".into(), ensign_id: None, check_interval: 30,
+            automation_level: 1, last_value: None, consecutive_breaches: 0,
+            is_breached: false, created_tick: 0, updated_tick: 0,
+        };
+        // |0.3| < 0.5 → in band
+        assert!(!c.check(0.3));
+        // |0.6| >= 0.5 → out of band
+        assert!(c.check(0.6));
     }
 }

@@ -3,6 +3,7 @@
 //! The main tick loop, message routing, and conservation budget management.
 
 use rusqlite::Connection;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -40,6 +41,39 @@ enum DegradeMode {
     Throttled,
     /// Out of budget — no API call; refuse honestly and escalate the tile.
     Floor,
+}
+
+// ---------------------------------------------------------------------------
+// KernelMetrics — observability (Samira's Prometheus request)
+// ---------------------------------------------------------------------------
+
+/// Snapshot of kernel state for metrics / monitoring.
+///
+/// All fields are computed on demand from live state. Can be serialized to
+/// JSON for Prometheus exposition or any other metrics backend.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct KernelMetrics {
+    /// Total tiles processed across all rooms.
+    pub tiles_processed: u64,
+    /// Remaining conservation budget in dollars.
+    pub conservation_remaining: f64,
+    /// Total conservation budget in dollars.
+    pub conservation_budget: f64,
+    /// Conservation used in dollars.
+    pub conservation_used: f64,
+    /// Number of active rooms.
+    pub rooms_active: u64,
+    /// Number of loaded modules.
+    pub modules_loaded: u64,
+    /// Average algebraic connectivity (Fiedler value) across the room graph.
+    /// 0.0 if no correlations have been computed yet.
+    pub avg_fiedler: f64,
+    /// Current kernel tick.
+    pub tick: u64,
+    /// Number of registered providers.
+    pub providers_count: usize,
+    /// Number of open ports.
+    pub ports_count: usize,
 }
 
 // ---------------------------------------------------------------------------
@@ -539,6 +573,46 @@ impl ShellKernel {
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
     }
 
+    /// Collect current kernel metrics for observability.
+    ///
+    /// Can be wired to Prometheus (`kernel_tiles_processed`, etc.) or any
+    /// other metrics backend.
+    #[allow(dead_code)]
+    pub async fn metrics(&self) -> KernelMetrics {
+        let db = self.db.lock().await;
+        let cons = self.conservation.lock().await;
+
+        let tiles_processed = tile::query_tiles(&db, None, None, None, usize::MAX)
+            .map(|t| t.len() as u64)
+            .unwrap_or(0);
+
+        let rooms_active = room::get_all_rooms(&db)
+            .map(|r| r.len() as u64)
+            .unwrap_or(0);
+
+        // Average Fiedler value = average absolute correlation coefficient
+        // across all detected correlations. Higher = more connected rooms.
+        let correlations = penrose::get_all_correlations(&db).unwrap_or_default();
+        let avg_fiedler = if correlations.is_empty() {
+            0.0
+        } else {
+            correlations.iter().map(|c| c.correlation.abs()).sum::<f64>() / correlations.len() as f64
+        };
+
+        KernelMetrics {
+            tiles_processed,
+            conservation_remaining: cons.remaining(),
+            conservation_budget: cons.budget,
+            conservation_used: cons.used,
+            rooms_active,
+            modules_loaded: 0, // TODO: wire to module loader
+            avg_fiedler,
+            tick: cons.tick,
+            providers_count: self.providers.len(),
+            ports_count: self.ports.len(),
+        }
+    }
+
     /// Graceful shutdown: stand down every ensign, persist conservation state,
     /// and checkpoint the WAL so SQLite closes cleanly on drop.
     pub async fn shutdown(&self) -> Result<(), String> {
@@ -751,5 +825,27 @@ mod tests {
         let mut kernel = make_kernel().await;
         kernel.providers.clear();
         assert_eq!(kernel.cheapest_provider(), None);
+    }
+
+    #[tokio::test]
+    async fn metrics_returns_snapshot() {
+        let kernel = make_kernel().await;
+        let m = kernel.metrics().await;
+        assert_eq!(m.providers_count, 1);
+        assert_eq!(m.ports_count, 0);
+        assert!((m.conservation_budget - 10000.0).abs() < f64::EPSILON);
+        assert!((m.conservation_used - 0.0).abs() < f64::EPSILON);
+        assert_eq!(m.tiles_processed, 0);
+        assert_eq!(m.rooms_active, 0);
+    }
+
+    #[tokio::test]
+    async fn metrics_after_message() {
+        let kernel = make_kernel().await;
+        let msg = test_message("test metrics");
+        kernel.process_message(&msg).await.unwrap();
+
+        let m = kernel.metrics().await;
+        assert!(m.conservation_used > 0.0);
     }
 }
