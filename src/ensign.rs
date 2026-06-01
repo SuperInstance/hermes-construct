@@ -42,6 +42,7 @@ impl EnsignStatus {
         }
     }
 
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Option<Self> {
         match s {
             "dormant" => Some(Self::Dormant),
@@ -174,6 +175,7 @@ pub trait Provider: Send + Sync {
 
 // ---------------------------------------------------------------------------
 // DeepInfra provider
+// TODO: Wire to real HTTP client with retry, timeout, and streaming support.
 // ---------------------------------------------------------------------------
 
 pub struct DeepInfraProvider {
@@ -250,6 +252,7 @@ impl Provider for DeepInfraProvider {
 
 // ---------------------------------------------------------------------------
 // z.ai provider
+// TODO: Wire to real HTTP client with retry, timeout, and streaming support.
 // ---------------------------------------------------------------------------
 
 pub struct ZaiProvider {

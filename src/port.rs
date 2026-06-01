@@ -122,6 +122,12 @@ pub struct StdioPort {
     incoming: Arc<Mutex<Vec<PortMessage>>>,
 }
 
+impl Default for StdioPort {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl StdioPort {
     pub fn new() -> Self {
         Self {

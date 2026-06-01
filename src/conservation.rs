@@ -9,6 +9,10 @@ use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 /// Cost table for operations (in energy units)
+///
+/// Conservation costs are abstract units calibrated to your API spending.
+/// 1.0 ≈ one typical LLM API call. Calibrate by running a few tasks and
+/// checking your actual spend, then adjust constants to match your budget.
 pub mod costs {
     pub const TILE_CREATE: f64 = 0.1;
     pub const TILE_COMPLETE: f64 = 0.05;

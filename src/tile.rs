@@ -32,6 +32,7 @@ impl TileType {
         }
     }
 
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Option<Self> {
         match s {
             "observation" => Some(Self::Observation),
@@ -71,6 +72,7 @@ impl TileStatus {
         }
     }
 
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Option<Self> {
         match s {
             "active" => Some(Self::Active),

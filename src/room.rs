@@ -34,6 +34,7 @@ impl RoomType {
         }
     }
 
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Option<Self> {
         match s {
             "navigation" => Some(Self::Navigation),
@@ -248,14 +249,16 @@ pub fn load_rooms_from_dir(
 }
 
 /// Route a message to the best matching room based on gravity and context
+///
+// Current: keyword-based routing. Simple and deterministic.
+// Planned: embedding-based semantic routing using JEPA representations.
+// The keyword approach is intentional for v0.1 — it's debuggable and predictable.
 pub fn route_to_room(conn: &Connection, message: &str) -> Result<Option<Room>, rusqlite::Error> {
     let rooms = get_all_rooms(conn)?;
     if rooms.is_empty() {
         return Ok(None);
     }
 
-    // Simple routing: prefer rooms with higher gravity confidence
-    // In a full implementation, this would use NLP/embedding similarity
     let msg_lower = message.to_lowercase();
 
     // Keyword-based routing

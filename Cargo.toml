@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 description = "Hermes Construct — tile-operating shell kernel for Oracle ARM"
 
+[lib]
+name = "hermes_construct"
+path = "src/lib.rs"
+
 [[bin]]
 name = "hermes-construct"
 path = "src/main.rs"
@@ -27,6 +31,7 @@ path = "examples/provenance_demo.rs"
 [[example]]
 name = "circuit_demo"
 path = "examples/circuit_demo.rs"
+
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
