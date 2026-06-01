@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //! room.rs — Room loading from JSON files, state management, gravity updates
 
 use rusqlite::{params, Connection};

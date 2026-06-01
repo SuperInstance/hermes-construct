@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //! conservation.rs — Budget tracking and enforcement
 //!
 //! Every operation costs tokens. Conservation enforcement ensures

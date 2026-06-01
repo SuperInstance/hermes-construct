@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //! port.rs — Port trait + Telegram adapter
 //!
 //! Ports are communication channels. The Telegram port receives messages

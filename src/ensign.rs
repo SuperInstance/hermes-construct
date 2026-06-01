@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //! ensign.rs — Ensign lifecycle and provider abstraction
 //!
 //! An Ensign is a small model (Seed-mini, GLM-flash) that maintains a room.

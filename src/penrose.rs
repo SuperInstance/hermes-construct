@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //! penrose.rs — Cross-room correlation detection
 //!
 //! Pearson coefficients between room signals. Detects when rooms

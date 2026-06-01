@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //! tile.rs — Tile types + SQLite CRUD
 //!
 //! The tile is the fundamental unit of work. Everything is a tile.

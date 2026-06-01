@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //! deadband.rs — Deadband monitoring and trend detection
 //!
 //! A deadband monitors a value within [lower, upper] bounds.
