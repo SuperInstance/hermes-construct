@@ -606,3 +606,150 @@ impl ShellKernel {
         self.shutdown().await
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ensign::{CompletionRequest, CompletionResponse, Provider};
+    use async_trait::async_trait;
+    use std::sync::atomic::{AtomicU32, Ordering as AtomicOrdering};
+
+    struct MockProvider {
+        call_count: AtomicU32,
+    }
+
+    #[async_trait]
+    impl Provider for MockProvider {
+        async fn complete(&self, req: &CompletionRequest) -> Result<CompletionResponse, String> {
+            self.call_count.fetch_add(1, AtomicOrdering::Relaxed);
+            Ok(CompletionResponse {
+                text: format!("echo: {}", req.prompt),
+                model: req.model.clone(),
+                tokens_used: 10,
+                provider: "mock".into(),
+            })
+        }
+        fn name(&self) -> &str { "mock" }
+    }
+
+    async fn make_kernel() -> ShellKernel {
+        let conn = Connection::open_in_memory().unwrap();
+        conn.execute_batch("PRAGMA foreign_keys = OFF;").unwrap();
+
+        conservation::init_schema(&conn).unwrap();
+        tile::init_schema(&conn).unwrap();
+        room::init_schema(&conn).unwrap();
+        ensign::init_schema(&conn).unwrap();
+        penrose::init_schema(&conn).unwrap();
+        deadband::init_schema(&conn).unwrap();
+
+        conn.execute_batch(
+            "CREATE TABLE IF NOT EXISTS provenance (
+                id TEXT PRIMARY KEY, tile_id TEXT NOT NULL, ensign_id TEXT,
+                model TEXT NOT NULL, provider TEXT NOT NULL, prompt_style TEXT,
+                temperature REAL, tokens_used INTEGER, conservation_cost REAL,
+                room_id TEXT, tick INTEGER, parent_provenance TEXT,
+                decision TEXT, is_valid BOOLEAN DEFAULT 1
+            );
+            CREATE INDEX IF NOT EXISTS idx_prov_tile ON provenance(tile_id);
+            CREATE INDEX IF NOT EXISTS idx_prov_room ON provenance(room_id);")
+        .unwrap();
+
+        conn.execute_batch(
+            "CREATE TABLE IF NOT EXISTS shell_meta (
+                key TEXT PRIMARY KEY, value TEXT NOT NULL
+            );")
+        .unwrap();
+
+        let cons_state = conservation::load_state(&conn).unwrap();
+
+        ShellKernel {
+            db: Arc::new(Mutex::new(conn)),
+            providers: vec![("deepinfra".into(), Box::new(MockProvider { call_count: AtomicU32::new(0) }))],
+            ports: vec![],
+            conservation: Arc::new(Mutex::new(cons_state)),
+            gravity_history: Arc::new(Mutex::new(HashMap::new())),
+            tick_interval_ms: 30_000,
+        }
+    }
+
+    fn test_message(text: &str) -> PortMessage {
+        PortMessage {
+            id: uuid::Uuid::new_v4().to_string(),
+            text: text.to_string(),
+            chat_id: 42,
+            from_user: Some("tester".into()),
+            timestamp: 0,
+        }
+    }
+
+    #[tokio::test]
+    async fn process_message_creates_tiles() {
+        let kernel = make_kernel().await;
+        let msg = test_message("build a feature");
+        kernel.process_message(&msg).await.unwrap();
+
+        let db = kernel.db.lock().await;
+        let tiles = tile::query_tiles(&db, None, None, None, 10).unwrap();
+        assert!(tiles.len() >= 2, "expected >= 2 tiles, got {}", tiles.len());
+
+        let obs = tiles.iter().find(|t| t.tile_type == TileType::Observation).unwrap();
+        assert_eq!(obs.content, "build a feature");
+    }
+
+    #[tokio::test]
+    async fn process_message_uses_provider() {
+        let kernel = make_kernel().await;
+        let msg = test_message("debug this");
+        kernel.process_message(&msg).await.unwrap();
+
+        let db = kernel.db.lock().await;
+        let actions = tile::query_tiles(&db, None, Some(&TileType::Action), None, 10).unwrap();
+        assert!(!actions.is_empty(), "no action tiles found");
+        let action = &actions[0];
+        assert!(action.content.starts_with("echo: debug this"));
+        assert_eq!(action.tokens_used, 10);
+    }
+
+    #[tokio::test]
+    async fn process_message_floor_refuses() {
+        use crate::tile::TileStatus;
+        let kernel = make_kernel().await;
+        {
+            let mut cons = kernel.conservation.lock().await;
+            cons.used = cons.budget - 5.0;
+        }
+        let msg = test_message("help");
+        kernel.process_message(&msg).await.unwrap();
+
+        let db = kernel.db.lock().await;
+        let actions = tile::query_tiles(&db, None, Some(&TileType::Action), None, 10).unwrap();
+        assert!(!actions.is_empty(), "no action tiles found");
+        assert!(actions[0].content.contains("low on energy"));
+        assert_eq!(actions[0].status, TileStatus::Escalated);
+    }
+
+    #[tokio::test]
+    async fn process_message_persists_conservation() {
+        let kernel = make_kernel().await;
+        let msg = test_message("hello");
+        kernel.process_message(&msg).await.unwrap();
+
+        let db = kernel.db.lock().await;
+        let state = conservation::load_state(&db).unwrap();
+        assert!(state.used > 0.0);
+    }
+
+    #[tokio::test]
+    async fn cheapest_provider_prefers_deepinfra() {
+        let kernel = make_kernel().await;
+        assert_eq!(kernel.cheapest_provider(), Some("deepinfra".to_string()));
+    }
+
+    #[tokio::test]
+    async fn cheapest_provider_empty() {
+        let mut kernel = make_kernel().await;
+        kernel.providers.clear();
+        assert_eq!(kernel.cheapest_provider(), None);
+    }
+}

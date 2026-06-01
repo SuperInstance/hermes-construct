@@ -294,3 +294,119 @@ fn row_to_room(row: &rusqlite::Row<'_>) -> Room {
         updated_tick: row.get::<_, i64>(11).unwrap_or(0) as u64,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn room_type_roundtrip() {
+        for rt in &[RoomType::Navigation, RoomType::Engineering, RoomType::Science, RoomType::Security, RoomType::Social] {
+            assert_eq!(RoomType::from_str(rt.as_str()), Some(rt.clone()));
+        }
+    }
+
+    #[test]
+    fn room_type_custom() {
+        assert_eq!(RoomType::from_str("kitchen"), Some(RoomType::Custom("kitchen".into())));
+        let c = RoomType::Custom("kitchen".into());
+        assert_eq!(c.as_str(), "kitchen");
+    }
+
+    #[test]
+    fn room_model_params() {
+        let room = Room {
+            id: "r1".into(), room_type: RoomType::Engineering, gravity: -0.8,
+            gravity_confidence: 0.5, temperature: 0.3, max_tokens: 500,
+            prompt_style: "precise".into(), deadband_tolerance: 0.1, ensign_id: None,
+            config: None, created_tick: 0, updated_tick: 0,
+        };
+        let p = room.model_params();
+        assert_eq!(p.prompt_style, "precise");
+    }
+
+    #[test]
+    fn decay_gravity_toward_zero() {
+        let mut room = Room {
+            id: "r1".into(), room_type: RoomType::Science, gravity: 0.5,
+            gravity_confidence: 0.5, temperature: 0.7, max_tokens: 2000,
+            prompt_style: "creative".into(), deadband_tolerance: 0.1, ensign_id: None,
+            config: None, created_tick: 0, updated_tick: 0,
+        };
+        room.decay_gravity(0.1, 10);
+        assert!((room.gravity - 0.45).abs() < 1e-9);
+        assert_eq!(room.updated_tick, 10);
+    }
+
+    #[test]
+    fn nudge_gravity_positive() {
+        let mut room = Room {
+            id: "r1".into(), room_type: RoomType::Social, gravity: 0.0,
+            gravity_confidence: 0.5, temperature: 0.7, max_tokens: 2000,
+            prompt_style: "creative".into(), deadband_tolerance: 0.1, ensign_id: None,
+            config: None, created_tick: 0, updated_tick: 0,
+        };
+        room.nudge_gravity(0.5, 0.1, 5);
+        assert!((room.gravity - 0.05).abs() < 1e-9);
+        assert_eq!(room.updated_tick, 5);
+    }
+
+    #[test]
+    fn nudge_gravity_clamps() {
+        let mut room = Room {
+            id: "r1".into(), room_type: RoomType::Navigation, gravity: 0.9,
+            gravity_confidence: 0.5, temperature: 0.7, max_tokens: 2000,
+            prompt_style: "narrative".into(), deadband_tolerance: 0.1, ensign_id: None,
+            config: None, created_tick: 0, updated_tick: 0,
+        };
+        room.nudge_gravity(5.0, 0.5, 1);
+        assert!((room.gravity - 1.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn upsert_and_get_room() {
+        let conn = Connection::open_in_memory().unwrap();
+        init_schema(&conn).unwrap();
+        let room = Room {
+            id: "test-room".into(), room_type: RoomType::Engineering,
+            gravity: 0.3, gravity_confidence: 0.8, temperature: 0.7,
+            max_tokens: 2000, prompt_style: "creative".into(),
+            deadband_tolerance: 0.1, ensign_id: None, config: None,
+            created_tick: 1, updated_tick: 1,
+        };
+        upsert_room(&conn, &room).unwrap();
+        let loaded = get_room(&conn, "test-room").unwrap().unwrap();
+        assert_eq!(loaded.id, "test-room");
+        assert_eq!(loaded.room_type, RoomType::Engineering);
+        assert!((loaded.gravity - 0.3).abs() < 1e-9);
+    }
+
+    #[test]
+    fn get_room_missing() {
+        let conn = Connection::open_in_memory().unwrap();
+        init_schema(&conn).unwrap();
+        assert!(get_room(&conn, "nope").unwrap().is_none());
+    }
+
+    #[test]
+    fn route_to_room_navigation() {
+        let conn = Connection::open_in_memory().unwrap();
+        init_schema(&conn).unwrap();
+        let room = Room {
+            id: "nav1".into(), room_type: RoomType::Navigation, gravity: 0.0,
+            gravity_confidence: 0.5, temperature: 0.5, max_tokens: 1000,
+            prompt_style: "balanced".into(), deadband_tolerance: 0.1, ensign_id: None,
+            config: None, created_tick: 0, updated_tick: 0,
+        };
+        upsert_room(&conn, &room).unwrap();
+        let found = route_to_room(&conn, "where should I navigate?").unwrap().unwrap();
+        assert_eq!(found.room_type, RoomType::Navigation);
+    }
+
+    #[test]
+    fn route_to_room_empty() {
+        let conn = Connection::open_in_memory().unwrap();
+        init_schema(&conn).unwrap();
+        assert!(route_to_room(&conn, "hello").unwrap().is_none());
+    }
+}

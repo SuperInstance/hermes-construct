@@ -148,3 +148,72 @@ impl Port for StdioPort {
         true
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn stdio_port_push_and_receive() {
+        let port = StdioPort::new();
+        let msg = PortMessage { id: "m1".into(), text: "hello".into(), chat_id: 123, from_user: Some("user".into()), timestamp: 0 };
+        port.push_message(msg.clone()).await;
+        let received = port.receive().await.unwrap();
+        assert_eq!(received.text, "hello");
+        assert_eq!(received.chat_id, 123);
+    }
+
+    #[tokio::test]
+    async fn stdio_port_empty_receive() {
+        let port = StdioPort::new();
+        assert!(port.receive().await.is_none());
+    }
+
+    #[tokio::test]
+    async fn stdio_port_lifo_order() {
+        let port = StdioPort::new();
+        for i in 0..3 {
+            port.push_message(PortMessage { id: format!("m{}", i), text: format!("msg{}", i), chat_id: 0, from_user: None, timestamp: 0 }).await;
+        }
+        let first = port.receive().await.unwrap();
+        assert_eq!(first.text, "msg2"); // Vec::pop() is LIFO
+    }
+
+    #[tokio::test]
+    async fn stdio_port_is_always_active() {
+        let port = StdioPort::new();
+        assert!(port.is_active());
+    }
+
+    #[tokio::test]
+    async fn stdio_port_send_ok() {
+        let port = StdioPort::new();
+        let resp = PortResponse { text: "response".into(), reply_to: "chat".into() };
+        assert!(port.send(&resp).await.is_ok());
+    }
+
+    #[test]
+    fn telegram_port_active_flag() {
+        let port = TelegramPort::new("dummy-token");
+        assert!(port.is_active());
+        port.set_active(false);
+        assert!(!port.is_active());
+        port.set_active(true);
+        assert!(port.is_active());
+    }
+
+    #[tokio::test]
+    async fn telegram_port_push_and_receive() {
+        let port = TelegramPort::new("dummy-token");
+        let msg = PortMessage { id: "m1".into(), text: "test".into(), chat_id: 42, from_user: None, timestamp: 0 };
+        port.push_message(msg).await;
+        let received = port.receive().await.unwrap();
+        assert_eq!(received.text, "test");
+    }
+
+    #[tokio::test]
+    async fn telegram_port_empty_receive() {
+        let port = TelegramPort::new("dummy-token");
+        assert!(port.receive().await.is_none());
+    }
+}

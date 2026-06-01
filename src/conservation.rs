@@ -131,3 +131,76 @@ pub fn save_state(conn: &Connection, state: &ConservationState) -> Result<(), ru
     )?;
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn conservation_state_remaining() {
+        let s = ConservationState { budget: 100.0, used: 30.0, tick: 0 };
+        assert!((s.remaining() - 70.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn can_spend_within_budget() {
+        let s = ConservationState { budget: 100.0, used: 30.0, tick: 0 };
+        assert!(s.can_spend(50.0));
+        assert!(!s.can_spend(80.0));
+    }
+
+    #[test]
+    fn can_spend_exact_remaining() {
+        let s = ConservationState { budget: 100.0, used: 30.0, tick: 0 };
+        assert!(s.can_spend(70.0));
+    }
+
+    #[test]
+    fn spend_success() {
+        let mut s = ConservationState { budget: 100.0, used: 0.0, tick: 0 };
+        assert!(s.spend(50.0).is_ok());
+        assert!((s.used - 50.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn spend_exceeds_budget() {
+        let mut s = ConservationState { budget: 10.0, used: 0.0, tick: 0 };
+        assert!(s.spend(20.0).is_err());
+    }
+
+    #[test]
+    fn deposit_increases_budget() {
+        let mut s = ConservationState { budget: 100.0, used: 50.0, tick: 0 };
+        s.deposit(25.0);
+        assert!((s.budget - 125.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn advance_tick_increments() {
+        GLOBAL_TICK.store(0, Ordering::Relaxed);
+        let t1 = advance_tick();
+        let t2 = advance_tick();
+        assert!(t2 > t1);
+    }
+
+    #[test]
+    fn init_schema_and_load_state() {
+        let conn = Connection::open_in_memory().unwrap();
+        init_schema(&conn).unwrap();
+        let state = load_state(&conn).unwrap();
+        assert!((state.budget - 10000.0).abs() < f64::EPSILON);
+        assert!((state.used - 0.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn save_and_reload_state() {
+        let conn = Connection::open_in_memory().unwrap();
+        init_schema(&conn).unwrap();
+        let state = ConservationState { budget: 500.0, used: 42.5, tick: 7 };
+        save_state(&conn, &state).unwrap();
+        let loaded = load_state(&conn).unwrap();
+        assert!((loaded.budget - 500.0).abs() < f64::EPSILON);
+        assert!((loaded.used - 42.5).abs() < f64::EPSILON);
+        assert_eq!(loaded.tick, 7);
+    }
+}

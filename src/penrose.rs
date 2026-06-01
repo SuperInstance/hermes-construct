@@ -248,3 +248,94 @@ fn row_to_correlation(row: &rusqlite::Row<'_>) -> Correlation {
         last_confirmed: row.get::<_, i64>(10).unwrap_or(0) as u64,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn spline_type_roundtrip() {
+        for s in &[SplineType::Causal, SplineType::Resonant, SplineType::Predictive, SplineType::Synergistic, SplineType::Redundant] {
+            assert_eq!(SplineType::from_str(s.as_str()), Some(s.clone()));
+        }
+    }
+
+    #[test]
+    fn pearson_perfect_positive() {
+        let x = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        let y = vec![2.0, 4.0, 6.0, 8.0, 10.0];
+        let r = pearson(&x, &y);
+        assert!((r - 1.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn pearson_perfect_negative() {
+        let x = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        let y = vec![10.0, 8.0, 6.0, 4.0, 2.0];
+        let r = pearson(&x, &y);
+        assert!((r - (-1.0)).abs() < 1e-9);
+    }
+
+    #[test]
+    fn pearson_uncorrelated() {
+        let x = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        let y = vec![5.0, 1.0, 4.0, 2.0, 3.0];
+        let r = pearson(&x, &y);
+        assert!(r.abs() < 0.5);
+    }
+
+    #[test]
+    fn pearson_empty_mismatched() {
+        assert_eq!(pearson(&[], &[]), 0.0);
+        assert_eq!(pearson(&[1.0], &[2.0]), 0.0);
+        assert_eq!(pearson(&[1.0, 2.0], &[1.0]), 0.0);
+    }
+
+    #[test]
+    fn pearson_constant_series() {
+        let x = vec![5.0, 5.0, 5.0];
+        let y = vec![1.0, 2.0, 3.0];
+        assert_eq!(pearson(&x, &y), 0.0);
+    }
+
+    #[test]
+    fn classify_causal() {
+        assert_eq!(classify_correlation(0.95), SplineType::Causal);
+        assert_eq!(classify_correlation(-0.92), SplineType::Causal);
+    }
+
+    #[test]
+    fn classify_predictive() {
+        assert_eq!(classify_correlation(0.75), SplineType::Predictive);
+    }
+
+    #[test]
+    fn classify_synergistic() {
+        assert_eq!(classify_correlation(0.55), SplineType::Synergistic);
+    }
+
+    #[test]
+    fn classify_resonant() {
+        assert_eq!(classify_correlation(0.35), SplineType::Resonant);
+    }
+
+    #[test]
+    fn classify_redundant() {
+        assert_eq!(classify_correlation(0.1), SplineType::Redundant);
+    }
+
+    #[test]
+    fn scan_correlations_inserts() {
+        let conn = Connection::open_in_memory().unwrap();
+        crate::room::init_schema(&conn).unwrap();
+        conn.execute("INSERT INTO rooms (id, room_type, created_tick, updated_tick) VALUES (?1, 'engineering', 0, 0)", ["r1"]).unwrap();
+        conn.execute("INSERT INTO rooms (id, room_type, created_tick, updated_tick) VALUES (?1, 'science', 0, 0)", ["r2"]).unwrap();
+        init_schema(&conn).unwrap();
+        let mut gravities = std::collections::HashMap::new();
+        gravities.insert("r1".into(), vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        gravities.insert("r2".into(), vec![2.0, 4.0, 6.0, 8.0, 10.0]);
+        let corrs = scan_correlations(&conn, &gravities, 1).unwrap();
+        assert_eq!(corrs.len(), 1);
+        assert!((corrs[0].correlation - 1.0).abs() < 1e-9);
+    }
+}

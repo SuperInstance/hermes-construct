@@ -272,7 +272,6 @@ pub fn query_tiles(
     if let Some(st) = status {
         sql.push_str(&format!(" AND status = ?{}", param_idx));
         param_values.push(Box::new(st.as_str().to_string()));
-        param_idx += 1;
     }
 
     sql.push_str(&format!(" ORDER BY created_tick DESC LIMIT {}", limit));
@@ -322,5 +321,117 @@ fn row_to_tile(row: &rusqlite::Row<'_>) -> Tile {
         metadata: meta_str.and_then(|s| serde_json::from_str(&s).ok()),
         created_tick: row.get::<_, i64>(14).unwrap_or(0) as u64,
         updated_tick: row.get::<_, i64>(15).unwrap_or(0) as u64,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn tile_type_roundtrip() {
+        for tt in &[TileType::Observation, TileType::Action, TileType::Thought, TileType::Delegation, TileType::Escalation, TileType::Artifact] {
+            assert_eq!(TileType::from_str(tt.as_str()), Some(tt.clone()));
+        }
+    }
+
+    #[test]
+    fn tile_status_roundtrip() {
+        for ts in &[TileStatus::Active, TileStatus::Complete, TileStatus::Deadband, TileStatus::Escalated, TileStatus::Archived] {
+            assert_eq!(TileStatus::from_str(ts.as_str()), Some(ts.clone()));
+        }
+    }
+
+    #[test]
+    fn tile_type_display() {
+        assert_eq!(format!("{}", TileType::Action), "action");
+    }
+
+    #[test]
+    fn tile_new_has_uuid() {
+        let t = Tile::new(TileType::Observation, "hello", 0);
+        assert!(!t.id.is_empty());
+        assert_eq!(t.tile_type, TileType::Observation);
+        assert_eq!(t.content, "hello");
+        assert_eq!(t.status, TileStatus::Active);
+        assert!(t.room_id.is_none());
+        assert!(t.parent_id.is_none());
+    }
+
+    #[test]
+    fn tile_builder_pattern() {
+        let t = Tile::new(TileType::Action, "test", 0)
+            .with_room("r1")
+            .with_parent("p1")
+            .with_ensign("e1");
+        assert_eq!(t.room_id.as_deref(), Some("r1"));
+        assert_eq!(t.parent_id.as_deref(), Some("p1"));
+        assert_eq!(t.ensign_id.as_deref(), Some("e1"));
+    }
+
+    #[test]
+    fn tile_complete() {
+        let mut t = Tile::new(TileType::Action, "done", 0);
+        t.complete(10);
+        assert_eq!(t.status, TileStatus::Complete);
+        assert_eq!(t.updated_tick, 10);
+    }
+
+    #[test]
+    fn tile_escalate() {
+        let mut t = Tile::new(TileType::Escalation, "bad", 0);
+        t.escalate("something went wrong", 5);
+        assert_eq!(t.status, TileStatus::Escalated);
+        assert_eq!(t.updated_tick, 5);
+        let meta = t.metadata.unwrap();
+        assert_eq!(meta["escalation_reason"], "something went wrong");
+    }
+
+    #[test]
+    fn insert_and_get_tile() {
+        let conn = Connection::open_in_memory().unwrap();
+        crate::room::init_schema(&conn).unwrap();
+        init_schema(&conn).unwrap();
+        let t = Tile::new(TileType::Observation, "test obs", 1);
+        insert_tile(&conn, &t).unwrap();
+        let loaded = get_tile(&conn, &t.id).unwrap().unwrap();
+        assert_eq!(loaded.id, t.id);
+        assert_eq!(loaded.content, "test obs");
+        assert_eq!(loaded.tile_type, TileType::Observation);
+    }
+
+    #[test]
+    fn get_tile_missing() {
+        let conn = Connection::open_in_memory().unwrap();
+        crate::room::init_schema(&conn).unwrap();
+        init_schema(&conn).unwrap();
+        assert!(get_tile(&conn, "nonexistent").unwrap().is_none());
+    }
+
+    #[test]
+    fn query_tiles_by_type() {
+        let conn = Connection::open_in_memory().unwrap();
+        crate::room::init_schema(&conn).unwrap();
+        init_schema(&conn).unwrap();
+        let t1 = Tile::new(TileType::Observation, "obs", 1);
+        let t2 = Tile::new(TileType::Action, "act", 2);
+        insert_tile(&conn, &t1).unwrap();
+        insert_tile(&conn, &t2).unwrap();
+        let obs = query_tiles(&conn, None, Some(&TileType::Observation), None, 10).unwrap();
+        assert_eq!(obs.len(), 1);
+        assert_eq!(obs[0].tile_type, TileType::Observation);
+    }
+
+    #[test]
+    fn update_status_in_db() {
+        let conn = Connection::open_in_memory().unwrap();
+        crate::room::init_schema(&conn).unwrap();
+        init_schema(&conn).unwrap();
+        let t = Tile::new(TileType::Action, "act", 1);
+        insert_tile(&conn, &t).unwrap();
+        super::update_tile_status(&conn, &t.id, &TileStatus::Complete, 5).unwrap();
+        let loaded = get_tile(&conn, &t.id).unwrap().unwrap();
+        assert_eq!(loaded.status, TileStatus::Complete);
+        assert_eq!(loaded.updated_tick, 5);
     }
 }

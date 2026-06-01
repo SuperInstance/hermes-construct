@@ -3,7 +3,7 @@
 //! A deadband monitors a value within [lower, upper] bounds.
 //! Trends: stable, drifting, oscillating, diverging.
 
-use rusqlite::{params, Connection};
+use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -194,7 +194,7 @@ impl DeadbandCircuit {
 }
 
 /// Run deadband checks for all circuits
-pub fn run_checks(conn: &Connection, tick: u64) -> Result<Vec<DeadbandCircuit>, rusqlite::Error> {
+pub fn run_checks(conn: &Connection, _tick: u64) -> Result<Vec<DeadbandCircuit>, rusqlite::Error> {
     let mut stmt = conn.prepare(
         "SELECT id, name, room_id, monitored_quantity, setpoint, tolerance,
                 action, ensign_id, check_interval, automation_level,
@@ -224,4 +224,110 @@ pub fn run_checks(conn: &Connection, tick: u64) -> Result<Vec<DeadbandCircuit>, 
     })?.filter_map(|r| r.ok()).collect();
 
     Ok(circuits)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn trend_roundtrip() {
+        for t in &[Trend::Stable, Trend::Drifting, Trend::Oscillating, Trend::Diverging] {
+            assert_eq!(Trend::from_str(t.as_str()), Some(t.clone()));
+        }
+    }
+
+    #[test]
+    fn trend_from_invalid() {
+        assert_eq!(Trend::from_str("unknown"), None);
+    }
+
+    #[test]
+    fn deadband_in_band() {
+        let db = DeadbandState::new(0.0, 10.0, 5.0);
+        assert!(db.is_in_band());
+    }
+
+    #[test]
+    fn deadband_below_band() {
+        let db = DeadbandState::new(0.0, 10.0, -1.0);
+        assert!(!db.is_in_band());
+    }
+
+    #[test]
+    fn deadband_at_boundary() {
+        let db = DeadbandState::new(0.0, 10.0, 0.0);
+        assert!(db.is_in_band());
+        let db2 = DeadbandState::new(0.0, 10.0, 10.0);
+        assert!(db2.is_in_band());
+    }
+
+    #[test]
+    fn update_stays_in_band_is_stable() {
+        let mut db = DeadbandState::new(0.0, 10.0, 5.0);
+        let trend = db.update(6.0);
+        assert_eq!(*trend, Trend::Stable);
+        assert_eq!(db.consecutive_breaches, 0);
+    }
+
+    #[test]
+    fn update_drifts_then_oscillates() {
+        let mut db = DeadbandState::new(0.0, 10.0, 5.0);
+        for _ in 0..3 { db.update(15.0); }
+        assert_eq!(db.trend, Trend::Drifting);
+        for _ in 0..4 { db.update(15.0); }
+        assert_eq!(db.trend, Trend::Oscillating);
+    }
+
+    #[test]
+    fn update_diverges_after_many_breaches() {
+        let mut db = DeadbandState::new(0.0, 10.0, 5.0);
+        for _ in 0..12 { db.update(15.0); }
+        assert_eq!(db.trend, Trend::Diverging);
+    }
+
+    #[test]
+    fn detect_trend_oscillating() {
+        let vals = vec![1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0];
+        assert_eq!(detect_trend(&vals), Trend::Oscillating);
+    }
+
+    #[test]
+    fn detect_trend_stable() {
+        let vals = vec![5.0, 5.0, 5.0, 5.0, 5.0];
+        assert_eq!(detect_trend(&vals), Trend::Stable);
+    }
+
+    #[test]
+    fn detect_trend_short_series() {
+        assert_eq!(detect_trend(&[1.0]), Trend::Stable);
+        assert_eq!(detect_trend(&[]), Trend::Stable);
+    }
+
+    #[test]
+    fn circuit_check_in_band() {
+        let mut c = DeadbandCircuit {
+            id: "c1".into(), name: "test".into(), room_id: "r1".into(),
+            monitored_quantity: "temp".into(), setpoint: 50.0, tolerance: 5.0,
+            action: "alert".into(), ensign_id: None, check_interval: 30,
+            automation_level: 1, last_value: None, consecutive_breaches: 0,
+            is_breached: false, created_tick: 0, updated_tick: 0,
+        };
+        assert!(!c.check(48.0)); // in band, not breached
+        assert!(!c.is_breached);
+    }
+
+    #[test]
+    fn circuit_check_out_of_band() {
+        let mut c = DeadbandCircuit {
+            id: "c1".into(), name: "test".into(), room_id: "r1".into(),
+            monitored_quantity: "temp".into(), setpoint: 50.0, tolerance: 5.0,
+            action: "alert".into(), ensign_id: None, check_interval: 30,
+            automation_level: 1, last_value: None, consecutive_breaches: 0,
+            is_breached: false, created_tick: 0, updated_tick: 0,
+        };
+        assert!(c.check(60.0)); // breach
+        assert!(c.is_breached);
+        assert_eq!(c.consecutive_breaches, 1);
+    }
 }

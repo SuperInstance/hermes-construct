@@ -494,3 +494,117 @@ fn row_to_ensign(row: &rusqlite::Row<'_>) -> Ensign {
         config: config_str.and_then(|s| serde_json::from_str(&s).ok()),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ensign_status_roundtrip() {
+        for s in &[
+            EnsignStatus::Dormant, EnsignStatus::Waking, EnsignStatus::Orienting,
+            EnsignStatus::GreenAlert, EnsignStatus::YellowAlert, EnsignStatus::RedAlert,
+            EnsignStatus::StandingDown, EnsignStatus::Escalated,
+        ] {
+            assert_eq!(EnsignStatus::from_str(s.as_str()), Some(s.clone()));
+        }
+    }
+
+    #[test]
+    fn ensign_status_invalid() {
+        assert_eq!(EnsignStatus::from_str("nonexistent"), None);
+    }
+
+    #[test]
+    fn ensign_lifecycle_wake_orient_yellow() {
+        let mut e = Ensign::new("e1", "seed-mini", "deepinfra");
+        assert_eq!(e.status, EnsignStatus::Dormant);
+        assert!(!e.can_handle());
+        e.wake();
+        assert_eq!(e.status, EnsignStatus::Waking);
+        e.orient();
+        assert_eq!(e.status, EnsignStatus::Orienting);
+        assert!(!e.can_handle());
+        e.go_yellow();
+        assert_eq!(e.status, EnsignStatus::YellowAlert);
+        assert!(e.can_handle());
+    }
+
+    #[test]
+    fn ensign_go_red_and_stand_down() {
+        let mut e = Ensign::new("e2", "glm-flash", "z.ai");
+        e.go_red();
+        assert_eq!(e.status, EnsignStatus::RedAlert);
+        assert_eq!(e.alert_level, AlertLevel::Red);
+        e.stand_down();
+        assert_eq!(e.status, EnsignStatus::StandingDown);
+        assert_eq!(e.alert_level, AlertLevel::Green);
+    }
+
+    #[test]
+    fn ensign_record_call() {
+        let mut e = Ensign::new("e3", "model", "prov");
+        e.record_call(5.0);
+        e.record_call(3.0);
+        assert_eq!(e.call_count, 2);
+        assert!((e.energy_used - 8.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn ensign_wake_only_from_dormant() {
+        let mut e = Ensign::new("e4", "m", "p");
+        e.wake();
+        e.wake(); // already Waking, no change
+        assert_eq!(e.status, EnsignStatus::Waking);
+    }
+
+    #[test]
+    fn build_messages_with_system_prompt() {
+        let msgs = build_messages(&Some("sys".into()), "user");
+        assert_eq!(msgs.len(), 2);
+        assert_eq!(msgs[0]["role"], "system");
+        assert_eq!(msgs[1]["role"], "user");
+    }
+
+    #[test]
+    fn build_messages_without_system_prompt() {
+        let msgs = build_messages(&None, "user");
+        assert_eq!(msgs.len(), 1);
+        assert_eq!(msgs[0]["role"], "user");
+    }
+
+    #[test]
+    fn get_provider_finds_matching() {
+        struct DummyProvider;
+        #[async_trait]
+        impl Provider for DummyProvider {
+            async fn complete(&self, _req: &CompletionRequest) -> Result<CompletionResponse, String> {
+                Ok(CompletionResponse { text: "".into(), model: "".into(), tokens_used: 0, provider: "dummy".into() })
+            }
+            fn name(&self) -> &str { "dummy" }
+        }
+        let providers: Vec<(String, Box<dyn Provider>)> = vec![("deepinfra".into(), Box::new(DummyProvider))];
+        let p = get_provider("deepinfra", &providers);
+        assert!(p.is_some());
+        assert_eq!(p.unwrap().name(), "dummy");
+    }
+
+    #[test]
+    fn get_provider_missing() {
+        let providers: Vec<(String, Box<dyn Provider>)> = vec![];
+        assert!(get_provider("none", &providers).is_none());
+    }
+
+    #[test]
+    fn sqlite_upsert_and_get() {
+        let conn = rusqlite::Connection::open_in_memory().unwrap();
+        crate::room::init_schema(&conn).unwrap();
+        init_schema(&conn).unwrap();
+        let e = Ensign::new("ensign-1", "seed-mini", "deepinfra");
+        upsert_ensign(&conn, &e).unwrap();
+        let loaded = get_all_ensigns(&conn).unwrap();
+        assert_eq!(loaded.len(), 1);
+        assert_eq!(loaded[0].id, "ensign-1");
+        assert_eq!(loaded[0].status, EnsignStatus::Dormant);
+    }
+}

@@ -75,3 +75,78 @@ pub fn style_to_system_prompt(style: &str) -> String {
         _ => "Be helpful and conversational.".to_string(),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gravity_negative_extreme_is_precise() {
+        let p = gravity_to_params(-1.0);
+        assert_eq!(p.prompt_style, "precise");
+        assert!((p.temperature - 0.3).abs() < f64::EPSILON);
+        assert_eq!(p.max_tokens, 500);
+    }
+
+    #[test]
+    fn gravity_negative_moderate_is_balanced() {
+        let p = gravity_to_params(-0.3);
+        assert_eq!(p.prompt_style, "balanced");
+        assert!((p.temperature - 0.5).abs() < f64::EPSILON);
+        assert_eq!(p.max_tokens, 1000);
+    }
+
+    #[test]
+    fn gravity_zero_is_creative() {
+        let p = gravity_to_params(0.0);
+        assert_eq!(p.prompt_style, "creative");
+        assert!((p.temperature - 0.7).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn gravity_positive_moderate_is_creative() {
+        let p = gravity_to_params(0.25);
+        assert_eq!(p.prompt_style, "creative");
+        assert_eq!(p.max_tokens, 2000);
+    }
+
+    #[test]
+    fn gravity_positive_extreme_is_narrative() {
+        let p = gravity_to_params(0.6);
+        assert_eq!(p.prompt_style, "narrative");
+        assert!((p.temperature - 0.9).abs() < f64::EPSILON);
+        assert_eq!(p.max_tokens, 4000);
+    }
+
+    #[test]
+    fn gravity_one_is_narrative() {
+        let p = gravity_to_params(1.0);
+        assert_eq!(p.prompt_style, "narrative");
+    }
+
+    #[test]
+    fn gravity_clamps_above_one() {
+        let p = gravity_to_params(5.0);
+        assert_eq!(p.prompt_style, "narrative");
+    }
+
+    #[test]
+    fn gravity_clamps_below_minus_one() {
+        let p = gravity_to_params(-5.0);
+        assert_eq!(p.prompt_style, "precise");
+    }
+
+    #[test]
+    fn style_to_system_prompt_known_styles() {
+        assert!(style_to_system_prompt("precise").contains("precise"));
+        assert!(style_to_system_prompt("balanced").contains("balanced"));
+        assert!(style_to_system_prompt("creative").contains("creative"));
+        assert!(style_to_system_prompt("narrative").contains("narrative"));
+    }
+
+    #[test]
+    fn style_to_system_prompt_unknown_falls_back() {
+        let s = style_to_system_prompt("unknown");
+        assert!(s.contains("helpful"));
+    }
+}
