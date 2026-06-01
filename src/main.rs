@@ -3,10 +3,12 @@
 //! Load .env, init SQLite, start Telegram polling, run main loop.
 
 mod conservation;
+mod onboarding;
 mod deadband;
 mod ensign;
 mod gravity;
 mod kernel;
+mod module;
 mod penrose;
 mod port;
 mod room;
@@ -147,6 +149,53 @@ async fn main() {
             }
         });
     }
+
+    // --- Module system bootstrap ---
+    {
+        use module::{ModuleRegistry, ModuleContext, StubModule, Capability, AutoLoader};
+
+        let mut registry = ModuleRegistry::new();
+
+        registry.register(Box::new(StubModule::new(
+            "crackle-runtime",
+            "0.1.0",
+            vec![Capability::PatternDetection, Capability::AnomalyDetection],
+            vec!["pattern".into(), "crackle".into()],
+        )));
+        registry.register(Box::new(StubModule::new(
+            "conservation-checker",
+            "0.1.0",
+            vec![Capability::ConservationTracking],
+            vec!["conservation".into(), "budget".into()],
+        )));
+        registry.register(Box::new(StubModule::new(
+            "cathedral-probe",
+            "0.1.0",
+            vec![Capability::TopologyAnalysis, Capability::SpectralAnalysis],
+            vec!["topology".into(), "cathedral".into()],
+        )));
+        registry.register(Box::new(StubModule::new(
+            "negative-space-testing",
+            "0.1.0",
+            vec![Capability::ForbiddenBehavior, Capability::OutputZoning],
+            vec!["negative".into(), "forbidden".into()],
+        )));
+        registry.register(Box::new(StubModule::new(
+            "spacemap",
+            "0.1.0",
+            vec![Capability::AnomalyDetection],
+            vec!["map".into(), "space".into()],
+        )));
+
+        log::info!("Module registry: {} modules registered", registry.registered_count());
+
+        // Demo: autoload a sample task to verify the pipeline works
+        let ctx = ModuleContext::new("bootstrap", 1.0, &[]);
+        let al = AutoLoader::new();
+        let loaded = al.analyze_and_load("analyze space topology anomalies", &mut registry, &ctx);
+        log::info!("Auto-loaded modules for bootstrap task: {:?}", loaded);
+    }
+    // --- End module system bootstrap ---
 
     log::info!("Hermes Construct v0.1 running. Ctrl+C to stop.");
 
