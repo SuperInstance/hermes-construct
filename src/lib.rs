@@ -16,4 +16,5 @@ pub mod onboarding;
 pub mod penrose;
 pub mod port;
 pub mod room;
+pub mod spectral;
 pub mod tile;

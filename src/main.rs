@@ -12,6 +12,7 @@ mod module;
 mod penrose;
 mod port;
 mod room;
+mod spectral;
 mod tile;
 
 use std::sync::Arc;
