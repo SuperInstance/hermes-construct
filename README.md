@@ -181,14 +181,6 @@ We're building toward a self-configuring agent that requires zero manual setup a
 
 ---
 
-## Architecture Docs
-
-- [PLATO_BUILD_PLAN.md](PLATO_BUILD_PLAN.md) — 7-phase plan for PLATO-native Hermes
-- [PROTOTYPE_v0.1.md](PROTOTYPE_v0.1.md) — Rust binary spec (SQLite, one binary, ARM-friendly)
-- [SCHEMAS.md](SCHEMAS.md) — Kernel type definitions
-- [ROADMAP.md](ROADMAP.md) — Full product roadmap
-- [UPSTREAM-MERGE-AUDIT.md](UPSTREAM-MERGE-AUDIT.md) — Upstream sync status
-
 ---
 
 ## Related Projects
