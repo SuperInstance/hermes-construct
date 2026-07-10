@@ -1,0 +1,10 @@
+# Phase 1 decoupling pin (see DECOUPLING-PROPOSAL.md §5 on branch
+# decoupling-research-2026-07-10).
+#
+# The Python `hermes-agent` package is now installed from PyPI instead of
+# carried as a vendored source tree. This file pins the exact version so
+# updates are an intentional one-line bump rather than a silent drift.
+#
+# Current pin maps to upstream tag v2026.7.7.2.
+# Verify the latest version with: pip index versions hermes-agent
+hermes-agent==0.18.2
