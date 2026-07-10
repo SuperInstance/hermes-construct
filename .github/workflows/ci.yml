@@ -4,16 +4,35 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
 jobs:
-  test:
+  # The Rust shell (src/) is what this repo builds and deploys (the deploy
+  # scripts are Rust-only — see DECOUPLING-PROPOSAL.md §1.2). CI must actually
+  # compile and test it; the previous `pytest || true` stub never did.
+  rust:
+    name: Rust shell
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install stable Rust toolchain
+        run: rustup toolchain install stable --profile minimal
+      - name: Build (release)
+        run: cargo build --release
+      - name: Test
+        run: cargo test
+
+  # Phase 1 decoupling: the Python hermes-agent is now pinned via
+  # requirements-hermes.txt. This job fails fast on a typo'd version or a
+  # package yanked from PyPI, before anyone tries to install it for real.
+  pin:
+    name: Python pin resolves
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-      - run: pip install pytest
-      - run: pytest || true
+          python-version: "3.12"
+      - name: Verify requirements-hermes.txt resolves on PyPI
+        run: |
+          python -m pip install --upgrade pip
+          pip install --dry-run -r requirements-hermes.txt
