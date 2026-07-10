@@ -49,18 +49,42 @@ The original Hermes Agent already has skills (self-created Python scripts the ag
 
 ## Quick Start
 
-### Install (same as upstream Hermes)
+### Two independent components
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
-source ~/.bashrc
-```
+This repo contains **two things that are separate today**:
 
-### Clone this fork
+1. **The Rust shell** (`src/`) — the tile-operating kernel this project builds and
+   deploys. This is the primary artifact.
+2. **The Python `hermes-agent`** — the full upstream agent. It's pinned in
+   `requirements-hermes.txt` and installed from PyPI when you want it.
+
+They do **not** currently talk to each other: the Rust shell has its own LLM
+providers and never invokes the Python agent (they are *parallel, not
+integrated*). Wiring the shell to host/orchestrate the agent is a **future
+direction**, not something implemented today.
+
+### Install the Rust shell
 
 ```bash
 git clone https://github.com/SuperInstance/hermes-construct.git
 cd hermes-construct
+
+# Build on x86
+cargo build --release
+./target/release/hermes-construct
+
+# Or cross-compile for ARM (Oracle Cloud, Jetson, Raspberry Pi)
+cargo build --release --target aarch64-unknown-linux-gnu
+```
+
+### Install the Python hermes-agent (optional)
+
+Only if you want the full upstream Python agent. It's pinned, so this pulls a
+known-good version:
+
+```bash
+pip install -r requirements-hermes.txt
+hermes --version    # sanity check the pin resolved
 ```
 
 ### Configure
@@ -69,25 +93,6 @@ cd hermes-construct
 cp .env.example .env
 # Edit .env: add your API keys (the agent never sees them directly)
 # Supported providers: OpenRouter, z.ai/GLM, Kimi/Moonshot, OpenAI, NovitaAI, any OpenAI-compatible endpoint
-```
-
-### Run on ARM (Oracle Cloud, Jetson, Raspberry Pi)
-
-```bash
-# Cross-compile from x86
-cargo build --release --target aarch64-unknown-linux-gnu
-# Or build on the ARM machine directly
-cargo build --release
-./target/release/hermes-construct
-```
-
-### Run on x86
-
-```bash
-# Python entrypoint (full Hermes Agent features)
-python cli.py
-# Or the Rust binary (lightweight, ARM-friendly)
-cargo run --release
 ```
 
 ---
