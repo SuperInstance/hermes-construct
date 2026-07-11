@@ -87,6 +87,14 @@ pip install -r requirements-hermes.txt
 hermes --version    # sanity check the pin resolved
 ```
 
+**On Windows**, use the inherited PowerShell installer instead
+(`scripts/install.ps1`, carried over from upstream — uses `uv` for fast
+Python provisioning):
+
+```powershell
+.\scripts\install.ps1
+```
+
 ### Configure
 
 ```bash
