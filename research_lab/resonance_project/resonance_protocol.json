@@ -1,0 +1,75 @@
+{
+  "protocol_name": "Resonance Protocol",
+  "version": "1.0.0",
+  "description": "Mathematical constraints and operational governance for the Resonance-based Vector Machine (R-VM), utilizing Hodge decomposition to categorize signal, noise, and residue.",
+  "core_principle": {
+    "concept": "Hodge Decomposition",
+    "application": "Discrete manifold decomposition of input streams into orthogonal components: Harmonic (Signal), Exact (Residue/Trend), and Co-exact (Noise/Fluctuation).",
+    "objective": "To isolate the maximal coherent signal (Harmonic component) while strictly pruning noise and non-structural residues."
+  },
+  "mathematical_framework": {
+    "decomposition_model": "Hodge-Helmholtz",
+    "components": {
+      "harmonic_component": {
+        "symbol": "H",
+        "definition": "The kernel of the Laplacian operator. Represents the steady-state, structural signal that satisfies the closedness and co-closedness constraints.",
+        "agent_action": "Preserve and amplify.",
+        "classification": "SIGNAL"
+      },
+      "exact_component": {
+        "symbol": "Ex",
+        "definition": "The gradient of a potential function. Represents the transient, directional flow or local energy shifts.",
+        "agent_action": "Monitor for emergent trends; classify as residue if non-persistent.",
+        "classification": "RESIDUE"
+      },
+      "co_exact_component": {
+        "symbol": "Cex",
+        "definition": "The curl of a vector potential. Represents rotational, non-conservative, and high-frequency fluctuations.",
+        "agent_action": "Attenuate and suppress.",
+        "classification": "NOISE"
+      }
+    },
+    "operator": "Laplacian (Δ = dδ + δd)"
+  },
+  "operational_constraints": {
+    "classification_logic": {
+      "signal_criteria": {
+        "continuity": "high",
+        "coherence_score": "> threshold_alpha",
+        "topological_stability": "persistent"
+      },
+      "noise_criteria": {
+        "entropy": "high",
+        "coherence_score": "< threshold_beta",
+        "spectral_density": "stochastic"
+      },
+      "residue_criteria": {
+        "gradient_presence": "non-zero",
+        "persistence": "transient"
+      }
+    },
+    "pruning_mechanism": {
+      "method": "Orthogonal Projection Pruning",
+      "thresholds": {
+        "alpha_signal": 0.85,
+        "beta_noise": 0.15,
+        "gamma_residue": 0.50
+      },
+      "logic": "If component(x) < threshold_beta, discard(x). If threshold_beta < component(x) < threshold_gamma, compress(x). If component(x) > threshold_alpha, prioritize(x)."
+    }
+  },
+  "agent_governance": {
+    "instruction_set": [
+      "1. Decompose input manifold via Hodge operator.",
+      "2. Assign components to {SIGNAL, NOISE, RESIDUE} based on mathematical criteria.",
+      "3. Apply pruning thresholds to the co-exact and residue components.",
+      "4. Reconstruct the manifold using only the isolated Harmonic component and filtered Residue elements.",
+      "5. Validate reconstruction against original energy conservation laws."
+    ],
+    "error_handling": {
+      "singular_matrix": "re-initialize manifold coordinates",
+      "decomposition_failure": "increase sampling frequency/resolution",
+      "threshold_violation": "re-calibrate alpha/beta/gamma constants"
+    }
+  }
+}
