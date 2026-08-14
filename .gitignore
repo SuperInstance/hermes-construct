@@ -103,3 +103,6 @@ universe.db
 *.db-wal
 *.db-shm
 .env
+
+# Python build artifacts
+build/
