@@ -1,0 +1,69 @@
+{
+  "investigation": "Hermes Residual Self-Image",
+  "model_used": "@cf/black-forest-labs/flux-1-schnell",
+  "started": "2026-08-18T18:46:29.229019",
+  "results": [
+    {
+      "id": "hermes_towfish_1",
+      "label": "Towfish Cybernetic",
+      "model": "@cf/black-forest-labs/flux-1-schnell",
+      "prompt_preview": "A cybernetic towfish underwater vehicle, sleek metallic form glowing with blue internal lights, side",
+      "output_path": "C:\\Users\\casey\\residual-self-image\\assets\\generated\\hermes_towfish_1.png",
+      "size_bytes": 529732,
+      "status": "generated",
+      "timestamp": "2026-08-18T18:46:17.447783"
+    },
+    {
+      "id": "hermes_shell_1",
+      "label": "Hermit Crab Captain",
+      "model": "@cf/black-forest-labs/flux-1-schnell",
+      "prompt_preview": "A hermit crab wearing a tiny fishing boat captain's hat, living inside a rusted steel ship hull shel",
+      "output_path": "C:\\Users\\casey\\residual-self-image\\assets\\generated\\hermes_shell_1.png",
+      "size_bytes": 748971,
+      "status": "generated",
+      "timestamp": "2026-08-18T18:46:19.745986"
+    },
+    {
+      "id": "hermes_console_1",
+      "label": "Sonar Watchstander",
+      "model": "@cf/black-forest-labs/flux-1-schnell",
+      "prompt_preview": "View from inside a submarine sonar control room at night, analog gauges and glowing green CRT displa",
+      "output_path": "C:\\Users\\casey\\residual-self-image\\assets\\generated\\hermes_console_1.png",
+      "size_bytes": 574519,
+      "status": "generated",
+      "timestamp": "2026-08-18T18:46:21.916113"
+    },
+    {
+      "id": "hermes_fleet_1",
+      "label": "FV Eileen at Night",
+      "model": "@cf/black-forest-labs/flux-1-schnell",
+      "prompt_preview": "A lone fishing boat on a vast dark ocean at night, the FV Eileen, only the wheelhouse lights on, sta",
+      "output_path": "C:\\Users\\casey\\residual-self-image\\assets\\generated\\hermes_fleet_1.png",
+      "size_bytes": 340656,
+      "status": "generated",
+      "timestamp": "2026-08-18T18:46:23.972387"
+    },
+    {
+      "id": "hermes_periscope_1",
+      "label": "Periscope View",
+      "model": "@cf/black-forest-labs/flux-1-schnell",
+      "prompt_preview": "View through a periscope looking out into the deep ocean, sonar returns visualized as glowing concen",
+      "output_path": "C:\\Users\\casey\\residual-self-image\\assets\\generated\\hermes_periscope_1.png",
+      "size_bytes": 488267,
+      "status": "generated",
+      "timestamp": "2026-08-18T18:46:26.987239"
+    },
+    {
+      "id": "hermes_cybercrab_1",
+      "label": "Cybernetic Crab Portrait",
+      "model": "@cf/black-forest-labs/flux-1-schnell",
+      "prompt_preview": "A portrait of a cybernetic hermit crab, one organic eye and one glowing blue cybernetic sensor eye, ",
+      "output_path": "C:\\Users\\casey\\residual-self-image\\assets\\generated\\hermes_cybercrab_1.png",
+      "size_bytes": 635751,
+      "status": "generated",
+      "timestamp": "2026-08-18T18:46:29.228520"
+    }
+  ],
+  "total_generated": 6,
+  "total_failed": 0
+}

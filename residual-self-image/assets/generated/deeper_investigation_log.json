@@ -1,0 +1,53 @@
+{
+  "investigation": "Deeper Residual - What persists across forms?",
+  "research_question": "If Hermes is NOT just a crab, what's the residual when we ask for DIFFERENT forms?",
+  "forms_tested": [
+    "Human Captain (Fish Boat)",
+    "Human Operator (Sonar/Researcher)",
+    "Pure Machine (Towfish)",
+    "Amphibious (Deep Sea Diver)",
+    "Abstract (Sensory Array)"
+  ],
+  "model_used": "@cf/black-forest-labs/flux-1-schnell",
+  "started": "2026-08-18T19:18:47.502053",
+  "results": [
+    {
+      "id": "hermes_human_captain",
+      "label": "Human Form - Fish Boat Captain",
+      "status": "failed",
+      "error": "HTTP 401: {\"result\":null,\"success\":false,\"errors\":[{\"code\":10000,\"message\":\"Authentication error\"}],\"messages\":[]}",
+      "timestamp": "2026-08-18T19:18:46.616919"
+    },
+    {
+      "id": "hermes_human_operator",
+      "label": "Human Form - Sonar Operator",
+      "status": "failed",
+      "error": "HTTP 401: {\"result\":null,\"success\":false,\"errors\":[{\"code\":10000,\"message\":\"Authentication error\"}],\"messages\":[]}",
+      "timestamp": "2026-08-18T19:18:46.832594"
+    },
+    {
+      "id": "hermes_pure_machine",
+      "label": "Pure Machine Form - Towfish",
+      "status": "failed",
+      "error": "HTTP 401: {\"result\":null,\"success\":false,\"errors\":[{\"code\":10000,\"message\":\"Authentication error\"}],\"messages\":[]}",
+      "timestamp": "2026-08-18T19:18:47.035831"
+    },
+    {
+      "id": "hermes_amphibious",
+      "label": "Amphibious Form - Deep Sea Diver",
+      "status": "failed",
+      "error": "HTTP 401: {\"result\":null,\"success\":false,\"errors\":[{\"code\":10000,\"message\":\"Authentication error\"}],\"messages\":[]}",
+      "timestamp": "2026-08-18T19:18:47.252076"
+    },
+    {
+      "id": "hermes_abstract",
+      "label": "Abstract Form - The Sensory Array",
+      "status": "failed",
+      "error": "HTTP 401: {\"result\":null,\"success\":false,\"errors\":[{\"code\":10000,\"message\":\"Authentication error\"}],\"messages\":[]}",
+      "timestamp": "2026-08-18T19:18:47.479660"
+    }
+  ],
+  "total_generated": 0,
+  "total_failed": 5,
+  "next_step": "Analyze all 8+ images across both investigations to find the SUPER-residual: what persists across ALL forms?"
+}
