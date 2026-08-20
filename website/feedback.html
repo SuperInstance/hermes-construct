@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Feedback – Hermes Gallery</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>Gallery Feedback</h1>
+    <form action="https://formspree.io/f/your-form-id" method="POST">
+      <label for="name">Name:</label><br>
+      <input type="text" id="name" name="name" required><br><br>
+
+      <label for="email">Email:</label><br>
+      <input type="email" id="email" name="_replyto"><br><br>
+
+      <label for="feedback">Your feedback:</label><br>
+      <textarea id="feedback" name="feedback" rows="5" required></textarea><br><br>
+
+      <button type="submit">Send Feedback</button>
+    </form>
+  </main>
+
+  <script src="js/lightbox.js"></script>
+</body>
+</html>
