@@ -15,6 +15,8 @@
 
 Hermes Construct does everything Hermes Agent does: runs on a $5 VPS, talks to you through Telegram or Discord, creates skills from experience, searches its own conversations, and works with any model (OpenRouter, z.ai/GLM, OpenAI, your own endpoint). Then it adds a module system on top: the agent watches what tasks come in, loads the tools those tasks need, and unloads them when they're no longer useful. You don't configure modules manually. The agent configures itself.
 
+<p align="center"><img src="assets/images/hero.jpg" alt="The cave walls are a shell, seen from inside" width="640"></p>
+
 ---
 
 ## What This Is
