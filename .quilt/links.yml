@@ -1,0 +1,20 @@
+# .quilt/links.yml — the Reader's Fold manifest (jev-quilt Law 6).
+# This repo carries NO verdicts about its neighbors — only content-addressed
+# pointers each reader folds under its own weights. Edit this file; never edit
+# the generated block in README.md by hand.
+
+repo: hermes-construct
+family: quilt
+
+substrate:                       # What this repo is GROWN ON (the upstream spine).
+  - repo: jev-quilt               # the fold's structural spine; conservation/room primitives echo its bookkeeping instinct
+
+related:                         # Sideways siblings — 1 HOP ONLY (Law 7, the Reach Bound).
+  - repo: laya4quilt
+    why: sibling quilt fork, same "fold a new layer onto an upstream engine" shape
+  - repo: micrograd-quilt
+    why: sibling fork of an external upstream, same "ask what the quilt adds" framing
+
+upstream:                        # FORKS ONLY — the folded-in origin (may be outside the org).
+  repo: NousResearch/hermes-agent
+  why: kept as a strict superset; the quilt layer adds modular capability loading, conservation tracking, and room-native architecture on top

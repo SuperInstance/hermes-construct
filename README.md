@@ -171,6 +171,70 @@ We track upstream closely. See [UPSTREAM-MERGE-AUDIT.md](UPSTREAM-MERGE-AUDIT.md
 
 ---
 
+## What Changed in the Quilt Fork
+
+The table above is the feature-level summary. Stated precisely, so a reader can tell our work
+from Nous Research's at a glance:
+
+- **Kept verbatim:** the entire Hermes Agent surface — CLI, TUI, Telegram/Discord/Slack/WhatsApp/
+  Signal, the self-improving learning loop (skills written from experience, memory, session
+  search), scheduled cron automations, subagent spawning, all six terminal backends (local,
+  Docker, SSH, Singularity, Modal, Daytona), model-agnostic provider support, voice memo
+  transcription, and the desktop app. Nothing on the base request path — a single message in,
+  a single response out, no modules loaded — was rewritten. [UPSTREAM-MERGE-AUDIT.md](UPSTREAM-MERGE-AUDIT.md)
+  tracks this at commit granularity: as of its last audit, 38 commits behind / 11 ahead, one
+  trivial merge conflict (`.env.example`).
+- **Added:** the module system (runtime load/unload behind a standard ABI), conservation
+  tracking (a budget that must not decrease — see [BUDGET_SOLUTION.md](BUDGET_SOLUTION.md)),
+  crackle pattern detection, negative-space testing (specifying and enforcing what the agent must
+  *never* do), topology probing (`cathedral-probe`'s spectral analysis of component graphs),
+  room-native architecture (isolated task contexts driven by one JEPA-gravity scalar), ensign
+  agents (cheap-model watchers that escalate), the PLATO tutor (close-enough meaning matching),
+  and ARM cross-compilation for $5/month instances.
+- **Changed:** nothing in how the base agent behaves with zero modules loaded — modules attach at
+  the ABI boundary, they don't reroute the core request path. Where we do diverge from upstream
+  on purpose (rather than just lagging it), that divergence is itself tracked in the merge audit's
+  priority table rather than left implicit.
+
+## What a Reader Learns
+
+- Hermes Agent teaches the shape of a self-improving agent loop: an agent that writes its own
+  skills from what it just did, searches its own conversation history, and runs on hardware as
+  small as a $5 VPS — proof that "self-improving" doesn't require a datacenter.
+- Folding it into the quilt teaches the complementary lesson: capability doesn't have to be
+  compiled in. A module system with a standard ABI lets an agent decide, per task, what it needs
+  and load only that — and conservation tracking (a quantity that must not decrease) is what
+  keeps a self-configuring agent from also being a self-bankrupting one.
+- Room-native architecture is worth taking away on its own: reshaping temperature, prompt style,
+  and sampling strategy from **one scalar** (JEPA gravity) — without ever touching model weights —
+  is a fine-tuning-without-training pattern that generalizes well past this repo.
+
+## How This Connects
+
+hermes-construct sits in the same quilt family as [jev-quilt](https://github.com/SuperInstance/jev-quilt)
+(the fold's structural spine) without yet importing its opcode doctrine directly — its
+conservation-as-invariant and room-as-context primitives are the same bookkeeping instinct,
+independently arrived at from the agent side rather than the ledger side. See the generated block
+below for the current map of what this repo sits beside.
+
+<!-- QUILT:LINKS:START — generated from .quilt/links.yml by quilt-links.mjs. Do not edit by hand. -->
+## Cross-pollination — the Reader's Fold
+
+*Part of the **quilt** family. Under [Law 6](https://github.com/SuperInstance/jev-quilt), this repo carries no verdicts about its neighbors — only content-addressed pointers you fold under your own weights.*
+
+**Folded from** — [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) — kept as a strict superset; the quilt layer adds modular capability loading, conservation tracking, and room-native architecture on top
+
+**Grown on** — [jev-quilt](https://github.com/SuperInstance/jev-quilt)
+
+**Related** (1-hop siblings — Law 7)
+- [laya4quilt](https://github.com/SuperInstance/laya4quilt) — sibling quilt fork, same "fold a new layer onto an upstream engine" shape
+- [micrograd-quilt](https://github.com/SuperInstance/micrograd-quilt) — sibling fork of an external upstream, same "ask what the quilt adds" framing
+
+<sub>Regenerate: `node quilt-links.mjs` · Fleet map: [FLEET.md](https://github.com/SuperInstance/fleet-seeds/blob/main/FLEET.md)</sub>
+<!-- QUILT:LINKS:END -->
+
+---
+
 ## The Roadmap
 
 We're building toward a self-configuring agent that requires zero manual setup after onboarding. The full plan is in [ROADMAP.md](ROADMAP.md):
