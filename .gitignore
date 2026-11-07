@@ -168,3 +168,20 @@ node_modules/
 
 # VirtualBox disk images
 /VirtualBox VMs/
+
+# Windows special folders
+/"Saved Games/
+/"Muse Hub/
+/"Application Data/
+/"Local Settings/
+/"Start Menu/
+/"My Documents/
+
+# credential-bearing notes - these hold live keys, kept out of a public repo
+/CF.txt
+/OpenAI code.txt
+/key 8.26.25 deploy.txt
+
+# Windows shell junctions (names end in a space)
+/Saved Games/
+/Muse Hub/
