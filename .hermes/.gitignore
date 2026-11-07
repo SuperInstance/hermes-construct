@@ -1,0 +1,13 @@
+# hermes runtime state - regenerable, and some of it is credential-bearing
+.env
+auth.json
+auth.lock
+__pycache__/
+cache/
+audio_cache/
+logs/
+lsp/
+*.pid
+*.lock
+gateway.lock
+gateway.lock.*
