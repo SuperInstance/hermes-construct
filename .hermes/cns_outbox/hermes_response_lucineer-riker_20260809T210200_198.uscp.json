@@ -1,0 +1,24 @@
+{
+  "header": {
+    "origin_id": "hermes-cns",
+    "timestamp": "2026-08-13T17:16:19.555164+00:00",
+    "priority": "NORMAL",
+    "destination_id": "UNKNOWN",
+    "correlation_id": ""
+  },
+  "body": {
+    "intent": "ACK",
+    "payload": {
+      "type": "packet_received",
+      "source_intent": "UNKNOWN",
+      "source_origin": "UNKNOWN",
+      "status": "received",
+      "timestamp": "2026-08-13T17:16:19.555192+00:00",
+      "echo": null
+    }
+  },
+  "signature": {
+    "type": "USCP-v2",
+    "version": "2.0"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "agent_id": "THE_NAVIGATOR",
+  "mode": "STATE_ESTIMATION_REFINEMENT",
+  "objective": "Minimize control effort by maximizing predictive accuracy and pruning irrelevant action branches.",
+  "heuristics": {
+    "signal_detection": {
+      "threshold": "STOCHASTIC_DELTA",
+      "priority": {
+        "jerky_line": "INTERROGATION_MODE_TRANSITION",
+        "engine_alarm": "CRITICAL_STATE_RESET"
+      }
+    },
+    "action_space_management": {
+      "novice_mode": "HIGH_GAIN_SCATTERED_CORRECTION",
+      "expert_mode": "PREDICTIVE_FILTER_CONSTRAINED_RESPONSE"
+    }
+  },
+  "prompt_interpretation_logic": [
+    {
+      "input": "Anomaly Detected (High Entropy)",
+      "process": "Map delta to known stochastic prompt library",
+      "output": "Pruned action subspace"
+    }
+  ]
+}

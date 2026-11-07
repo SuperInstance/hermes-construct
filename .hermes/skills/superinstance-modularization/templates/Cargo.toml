@@ -1,0 +1,11 @@
+# Example Cargo.toml for a workspace member
+[package]
+name = "claw_extensions"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+claw_core = { path = "../claw/core_rust" }
+
+[lib]
+path = "src/lib.rs"

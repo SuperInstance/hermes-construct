@@ -1,0 +1,9 @@
+{
+  "last_report_path": "C:\\Users\\casey\\.hermes\\logs\\curator\\20260920-184508",
+  "last_run_at": "2026-09-20T18:45:08.402356+00:00",
+  "last_run_duration_seconds": 15.799667,
+  "last_run_summary": "auto: 24 marked stale; llm: no change",
+  "last_run_summary_shown_at": null,
+  "paused": false,
+  "run_count": 10
+}

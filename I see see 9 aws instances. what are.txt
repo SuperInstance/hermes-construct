@@ -1,0 +1,6 @@
+I see see 9 aws instances. what are they all currently doing? turn not idling ones and report to me want the researching ones are working on
+
+
+right now the app being generated just says the the prompt as a placeholder. make sure they build a real functional app or game. and have the tester play the game or try to use the app for its function to judge how good of an app was made. after each iteration and delete data from more than 5 iterations earlier to have a backup and something to compare changes to but also to clean up files any older
+
+

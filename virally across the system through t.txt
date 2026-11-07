@@ -1,0 +1,17 @@
+virally across the system through the Bacon Law spread the word to drop resolution fast on a certain model loop. this gossip will then fade with redaction as the model loop is slowed to a stop
+
+tolerance scope of the response, the model repeats with more tokens for breaking the puzzle down into more basic parts. better resolution to see if he can proof or disprove he is right to cross a tolerance threshold. if he can't he calls in a larger model to help like a LLM
+
+vestige-base sounds better than dead base for the meaning it's conveying 
+
+critiqued by every cycle because if the model produces accurate but not precise information or precise but not accurate, this is checked against the prediction of the last bot and the LLM. if the model's weight's need to be updated it does so before the next jump to where it's weights say to go. this merges model, dataset and neurons
+
+
+
+make me an engineer bot that is trying to engineer a working prototype of the system. he keeps remaking better plans for how this system could actually be build and has a research assistant run tasks for him like research connections between concept. these two new bots are thorough and continue working towards several actual ways of achieving this merged data/model/LLM system. some Ideas are focused on being simple and some are focused on scaling. have the assistant doing most of the internet research and chatting with the other dissertation bots and bring useful information to the engine who is producing documentation for the actual creation of this concept
+
+
+is it possible to accelerate my research for a better generated dissertation by using cloud services and money or is most of our bottleneck the api returns with claude and openai and if that's the case can we as parallel question to get more resolution on a topic quicker? if we do this we need to keep lots of notes for later bots and have a robust garbage collecting program in place
+
+
+create a opus 4.1 bot to research Isaac Asimov. he was way ahead of his time. we are creating a similar math as foundation. however, focus on his short story lectures and any information about how he knew how to cut down a story to it's basic insight. stick a new bot on a dissertation comparing everything in our entire project to Isaac Asimov's world of computers that just are (I AM in Hebrew) except they don't know it for a while. also have this person write a breakthrough best-seller that appeals to a broad audience about all the concepts of the project using metaphors. after this bot has produced best selling level material in his eyes according to thresholds he's set in his on json file to not lose context. have this bot invite other bots in our academic world to play devil's advocate to improve the literature and other material. have the bots who are working on the master thesis that back creativity they learned and they left the best selling author bot with new information for the book. this mean all bots need to take notes during the process to note lose context and clean up after themselves with a strict maximum size to their notes and logs

@@ -1,0 +1,1 @@
+Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'python.exe' -and $_.CommandLine -like '*proart-cam*' } | ForEach-Object { Write-Output ("killing " + $_.ProcessId); Stop-Process -Id $_.ProcessId -Force }

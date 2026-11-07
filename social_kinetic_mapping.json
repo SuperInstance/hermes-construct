@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "logic_type": "fuzzy_bucket",
+    "description": "Enriched social kinetic mapping using fuzzy-logic buckets for continuous parameter scaling."
+  },
+  "buckets": {
+    "tension": {
+      "param": "trust_weight",
+      "multiplier": -0.2,
+      "threshold": 0.4,
+      "description": "Higher tension reduces trust weight."
+    },
+    "aggression": {
+      "param": "aggression_multiplier",
+      "multiplier": 1.5,
+      "threshold": 0.6,
+      "description": "High tension/uncertainty increases aggression bias."
+    },
+    "cohesion": {
+      "param": "group_coordination",
+      "multiplier": 0.5,
+      "threshold": 0.7,
+      "description": "Higher cohesion amplifies coordination scaling."
+    },
+    "entropy": {
+      "param": "signal_noise_ratio",
+      "multiplier": -0.3,
+      "threshold": 0.5,
+      "description": "Social entropy inversely affects signal clarity."
+    },
+    "velocity": {
+      "param": "information_diffusion_rate",
+      "multiplier": 1.2,
+      "threshold": 0.3,
+      "description": "Low latency/high velocity increases diffusion rate efficiency."
+    }
+  },
+  "interaction_matrix": {
+    "tension_x_cohesion": {
+      "effect": "instability_coefficient",
+      "formula": "tension * (1 - cohesion)"
+    },
+    "aggression_x_velocity": {
+      "effect": "chaos_index",
+      "formula": "aggression * velocity"
+    }
+  }
+}

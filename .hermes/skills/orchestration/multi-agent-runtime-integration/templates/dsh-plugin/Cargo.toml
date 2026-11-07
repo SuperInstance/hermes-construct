@@ -1,0 +1,14 @@
+[package]
+name = "dsh-plugin-{{PLUGIN_NAME}}"
+version = "0.1.0"
+edition = "2021"
+description = "{{DESCRIPTION}}"
+license = "MIT"
+
+[dependencies]
+cns-dsh-bridge = { path = "../../cns-dsh-bridge" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full", "macros", "rt-multi-thread"] }
+tracing = "0.1"
+anyhow = "1.0"

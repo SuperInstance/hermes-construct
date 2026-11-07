@@ -1,0 +1,24 @@
+superinstance_manifest:
+  version: "1.0.0"
+  repos:
+    claw:
+      url: https://github.com/SuperInstance/claw.git
+      path: /c/Users/casey/polln/claw
+      depends_on: [constrainttheory, dodecet-encoder]
+    spreadsheet-moment:
+      url: https://github.com/SuperInstance/spreadsheet-moment.git
+      path: /c/Users/casey/polln/spreadsheet-moment
+      depends_on: [claw, constrainttheory]
+    constrainttheory:
+      url: https://github.com/SuperInstance/constrainttheory.git
+      path: /c/Users/casey/polln/constrainttheory
+      depends_on: []
+    dodecet-encoder:
+      url: https://github.com/SuperInstance/dodecet-encoder.git
+      path: /c/Users/casey/polln/dodecet-encoder
+      depends_on: []
+    ai-writings:
+      url: https://github.com/SuperInstance/ai-writings.git
+      path: /c/Users/casey/polln/ai-writings
+      depends_on: []
+  sync_policy: agentic

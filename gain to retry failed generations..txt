@@ -1,0 +1,79 @@
+gain to retry failed generations.
+activeloguser@eileen:~$ python3 fix_episode_components.py
+🔧 Component Fixer for Episode 1
+================================
+Enter your OpenAI API key: (redacted)
+🔧 The Loopless - Component Fixer
+==================================================
+📋 Checking existing assets...
+✅ Casey base
+✅ Casey wonder
+✅ Casey excitement
+✅ Finn confident
+❌ Anna frustrated - MISSING
+✅ Michele concerned
+✅ Casey concentration
+✅ Anna curiosity
+✅ Finn teaching
+✅ Michele recognition
+✅ Older Michele
+✅ Older Finn
+✅ Tavern interior
+✅ Boat interior
+✅ Floating dock
+✅ System chaos
+✅ Musical aurora
+✅ Boat chaos
+✅ Tavern firelight
+✅ System glitch
+✅ Optimization display
+✅ Music transition
+✅ Ocean tavern
+✅ Chaos cascade
+
+📊 Status: 23/24 assets exist
+
+🔧 Regenerating 1 missing components...
+⚠️  No prompt defined for loopless_assets/characters/anna_frustrated.png
+
+📝 Creating missing scripts...
+
+📋 Final Asset Check:
+📋 Checking existing assets...
+✅ Casey base
+✅ Casey wonder
+✅ Casey excitement
+✅ Finn confident
+❌ Anna frustrated - MISSING
+✅ Michele concerned
+✅ Casey concentration
+✅ Anna curiosity
+✅ Finn teaching
+✅ Michele recognition
+✅ Older Michele
+✅ Older Finn
+✅ Tavern interior
+✅ Boat interior
+✅ Floating dock
+✅ System chaos
+✅ Musical aurora
+✅ Boat chaos
+✅ Tavern firelight
+✅ System glitch
+✅ Optimization display
+✅ Music transition
+✅ Ocean tavern
+✅ Chaos cascade
+
+📊 Status: 23/24 assets exist
+
+🎉 COMPONENT FIX COMPLETE!
+✅ Assets existing: 23
+❌ Still missing: 1
+
+🔍 Still missing:
+   - Anna frustrated
+
+Try running this script again to retry failed generations.
+activeloguser@eileen:~$
+

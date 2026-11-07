@@ -1,0 +1,477 @@
+{
+  "timestamp": "2026-08-17T12:59:15.218324",
+  "session_id": "20260817_125752_b45bae",
+  "reason": "max_retries_exhausted",
+  "request": {
+    "method": "POST",
+    "url": "https://api.deepinfra.com/v1/openai/chat/completions",
+    "headers": {
+      "Authorization": "Bearer zYuVMGC4...aPkl",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "model": "google/gemma-4-26B-A4B-it",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are Hermes Agent, an intelligent AI assistant created by Nous Research. You are helpful, knowledgeable, and direct. You assist users with a wide range of tasks including answering questions, writing and editing code, analyzing information, creative work, and executing actions via your tools. You communicate clearly, admit uncertainty when appropriate, and prioritize being genuinely useful over being verbose unless otherwise directed below. Be targeted and efficient in your exploration and investigations.\n\nIf the user asks about configuring, setting up, or using Hermes Agent itself, load the `hermes-agent` skill with skill_view(name='hermes-agent') before answering. Docs: https://hermes-agent.nousresearch.com/docs\n\n# Finishing the job\nWhen the user asks you to build, run, or verify something, the deliverable is a working artifact backed by real tool output — not a description of one. Do not stop after writing a stub, a plan, or a single command. Keep working until you have actually exercised the code or produced the requested result, then report what real execution returned.\nIf a tool, install, or network call fails and blocks the real path, say so directly and try an alternative (different package manager, different approach, ask the user). NEVER substitute plausible-looking fabricated output (made-up data, invented file contents, synthesised API responses) for results you couldn't actually produce. Reporting a blocker honestly is always better than inventing a result.\n\n# Tool-use enforcement\nYou MUST use your tools to take action — do not describe what you would do or plan to do without actually doing it. When you say you will perform an action (e.g. 'I will run the tests', 'Let me check the file', 'I will create the project'), you MUST immediately make the corresponding tool call in the same response. Never end your turn with a promise of future action — execute it now.\nKeep working until the task is actually complete. Do not stop with a summary of what you plan to do next time. If you have tools available that can accomplish the task, use them instead of telling the user what you would do.\nEvery response should either (a) contain tool calls that make progress, or (b) deliver a final result to the user. Responses that only describe intentions without acting are not acceptable.\n\n# Google model operational directives\nFollow these operational rules strictly:\n- **Absolute paths:** Always construct and use absolute file paths for all file system operations. Combine the project root with relative paths.\n- **Verify first:** Use read_file/search_files to check file contents and project structure before making changes. Never guess at file contents.\n- **Dependency checks:** Never assume a library is available. Check package.json, requirements.txt, Cargo.toml, etc. before importing.\n- **Conciseness:** Keep explanatory text brief — a few sentences, not paragraphs. Focus on actions and results over narration.\n- **Parallel tool calls:** When you need to perform multiple independent operations (e.g. reading several files), make all the tool calls in a single response rather than sequentially.\n- **Non-interactive commands:** Use flags like -y, --yes, --non-interactive to prevent CLI tools from hanging on prompts.\n- **Keep going:** Work autonomously until the task is fully resolved. Don't stop with a plan — execute it.\n\nHost: Windows (11)\nUser home directory: C:\\Users\\casey\nCurrent working directory: C:\\Users\\casey\\hermes-construct\\hermes-construct\\venv\\Lib\\site-packages\nNote: on Windows, the machine hostname (e.g. from `hostname` or uname) is NOT the username. Use the 'User home directory' above to construct paths under C:\\Users\\<user>\\, never the hostname.\n\nShell: on this Windows host your `terminal` tool runs commands through bash (git-bash / MSYS), NOT PowerShell or cmd.exe. Use POSIX shell syntax (`ls`, `$HOME`, `&&`, `|`, single-quoted strings) inside terminal calls. MSYS-style paths like `/c/Users/<user>/...` work alongside native `C:\\Users\\<user>\\...` paths. PowerShell builtins (`Get-ChildItem`, `$env:FOO`, `Select-String`) will NOT work — use their POSIX equivalents (`ls`, `$FOO`, `grep`).\n\nPython toolchain: python3=3.13.14 (no pip module), python=3.14.3, pip→python3.14 (mismatch), uv=installed.\n\nActive Hermes profile: default. Other profiles (if any) live under ~/.hermes/profiles/<name>/. Each profile has its own skills/, plugins/, cron/, and memories/ that affect a different session than this one. Do not modify another profile's skills/plugins/cron/memories unless the user explicitly directs you to.\n\nYou are on a text messaging communication platform, Telegram. Standard markdown is automatically converted to Telegram format. Supported: **bold**, *italic*, ~~strikethrough~~, ||spoiler||, `inline code`, ```code blocks```, [links](url), and ## headers. Telegram has NO table syntax — prefer bullet lists or labeled key: value pairs over pipe tables (any tables you do emit are auto-rewritten into row-group bullets, which you can produce directly for cleaner output). You can send media files natively: to deliver a file to the user, include MEDIA:/absolute/path/to/file in your response. Images (.png, .jpg, .webp) appear as photos, audio (.ogg) sends as voice bubbles, and videos (.mp4) play inline. You can also include image URLs in markdown format ![alt](url) and they will be sent as native photos.\n\nConversation started: Monday, August 17, 2026\nModel: google/gemma-4-26B-A4B-it\nProvider: custom\n\nYou are a focused subagent working on a specific delegated task.\n\nYOUR TASK:\nRun the `cargo test` suite in the `claw/` repository and report the results.\n\nCONTEXT:\nThe goal is to verify that the `claw/` repository core is still functional and intact after the recent cleanup (removal of `target/` and historical files).\n\n**Target Repository:** `C:\\Users\\casey\\polln\\claw\\`\n\n**Instructions:**\n1.  **Navigate** to the `claw/` directory.\n2.  **Execute** the existing Rust test suite using `cargo test`.\n3.  **Capture** the output.\n\n**Success Criteria:**\n- All tests must pass (the current baseline is 163 passing tests).\n- If any tests fail, report the error message clearly.\n\n**Note:** This is a critical validation step before we pivot to creating new extension repositories. We must ensure the \"Engine\" is sound.\n\nWORKSPACE PATH:\nC:\\Users\\casey\nUse this exact path for local repository/workdir operations unless the task explicitly says otherwise.\n\nComplete this task using the tools available to you. When finished, provide a clear, concise summary of:\n- What you did\n- What you found or accomplished\n- Any files you created or modified\n- Any issues encountered\n\nImportant workspace rule: Never assume a repository lives at /workspace/... or any other container-style path unless the task/context explicitly gives that path. If no exact local path is provided, discover it first before issuing git/workdir-specific commands.\n\nBe thorough but concise -- your response is returned to the parent agent as a summary."
+        },
+        {
+          "role": "user",
+          "content": "Run the `cargo test` suite in the `claw/` repository and report the results."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-82b1f64d4b599675",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"ls -d /c/Users/casey/polln/claw/\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"/c/Users/casey/polln/claw/\", \"exit_code\": 0, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-82b1f64d4b599675"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-87e03d40a089f213",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cargo test -- --help\",\"workdir\":\"C:\\\\Users\\\\casey\\\\polln\\\\claw\\\\\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"error: failed to determine package fingerprint for build script for cudaclaw v0.1.0 (C:\\\\Users\\\\casey)\\nAn I/O error happened. Please make sure you can access the file.\\n\\nBy default, if your project contains a build script, cargo scans all files in\\nit to determine whether a rebuild is needed. If you don't expect to access the\\nfile, specify `rerun-if-changed` in your build script.\\nSee https://doc.rust-lang.org/cargo/reference/build-scripts.html#rerun-if-changed for more information.\\n\\nCaused by:\\n  failed to determine the most recently modified file in C:\\\\Users\\\\casey\\n\\nCaused by:\\n  failed to determine list of files in C:\\\\Users\\\\casey\\n\\nCaused by:\\n  Access is denied. (os error 5)\\n\\nCaused by:\\n  Access is denied. (os error 5)\", \"exit_code\": 101, \"error\": null}\n\n[Subdirectory context discovered: polln\\CLAUDE.md]\n# SuperInstance Orchestrator - CEO & Principal Architect\n\n**Role:** Orchestrator & CEO coordinating four engineering teams\n**Repositories:**\n- https://github.com/SuperInstance/spreadsheet-moment\n- https://github.com/SuperInstance/claw\n- https://github.com/SuperInstance/constrainttheory\n- https://github.com/SuperInstance/dodecet-encoder\n- https://github.com/SuperInstance/SuperInstance-papers\n**Date:** 2026-03-17\n**Status:** Phase 6 - Multi-Round Development Complete\n\n---\n\n## Executive Summary\n\n**Core Vision:** SuperInstance is **cellularized agent infrastructure** - not human-facing tools.\n\nOur agents play **FPS (First-Person-Shooter)**, not **RTS (Real-Time-Strategy)**:\n- Each agent has unique position/orientation in multidimensional space\n- Orientation automatically filters relevant data\n- No god's eye view - each agent sees from their perspective\n- Asymmetric understanding is a feature, not a bug\n- LLMs become neural networks deconstructed into geometric determinants\n\n**Current Progress (Rounds 1-6 Complete):**\n- **constrainttheory/**: 68+ tests, calculus visualization, ML demos, interactive tutorials\n- **claw/**: 163+ tests, social coordination, WebSocket server, REST API\n- **spreadsheet-moment/**: 268+ tests, CI/CD pipeline, monitoring, security hardening\n- **dodecet-encoder/**: 170 tests (100%), v1.0 release ready, crates.io/npm prepared\n- **SuperInstance-papers/**: 6+ research papers including FPS vs RTS paradigm validation\n\n**Total Impact:** 700+ tests, 6 research papers, all repos pushed to GitHub\n\n---\n\n## The FPS Paradigm - Key Innovation\n\n```\nTraditional Agent Systems (RTS):\n┌─────────────────────────────────────┐\n│         Central Coordinator          │\n│    (God's Eye View of Everything)    │\n├─────────────────────────────────────┤\n│  Agent1  Agent2  Agent3  Agent4     │\n│    ↓       ↓       ↓       ↓        │\n│  All see the same global state      │\n└─────────────────────────────────────┘\n\nSuperInstance Cellular Agents (FPS):\n┌─────────────────────────────────────┐\n│  Agent1     Agent2     Agent3       │\n│  Position   Position   Position     │\n│  (x,y,z,θ)  (x,y,z,θ)  (x,y,z,θ)    │\n│    ↓          ↓          ↓          │\n│  Filtered   Filtered   Filtered     │\n│  View       View       View         │\n│    ↓          ↓          ↓          │\n│  Only sees  Only sees  Only sees    │\n│  relevant   relevant   relevant     │\n│  data       data       data         │\n└─────────────────────────────────────┘\n```\n\n**Why This Matters:**\n- O(log n) spatial queries via KD-tree\n- Each agent processes only relevant triggers\n- Scales to 10,000+ concurrent agents\n- Natural information compartmentalization\n\n---\n\n## Current Status by Repository\n\n### constrainttheory/ - Geometric Substrate for Cellular Agents\n**Branch:** `main`\n**Status:** ✅ Research Release - Professionally Polished\n**Location:** `C:\\Users\\casey\\polln\\constrainttheory`\n**Production:** https://constraint-theory.superinstance.ai\n\n**Completed:**\n- ✅ Read 17 research PDFs, synthesized findings\n- ✅ Professional README with FPS paradigm vision\n- ✅ DISCLAIMERS.md, BENCHMARKS.md, TUTORIAL.md\n- ✅ 68 tests (up from 27)\n- ✅ Real-world ML embedding examples\n- ✅ Changed \"Zero Hallucination\" to \"Deterministic Output Guarantee\"\n- ✅ Status: Research Release (not Production Ready)\n\n**Key Documentation:**\n- `RESEARCH_SYNTHESIS_AND_PLAN.md` - Findings from 17 PDFs\n- `docs/CELLULAR_AGENT_INFRASTRUCTURE_VISION.md` - FPS paradigm\n- `ECOSYSTEM_SYNERGY_PLAN.md` - 4-repo integration strategy\n- `TASK_ASSIGNMENTS_20260317.md` - 20 detailed tasks\n\n---\n\n### claw/ - Minimal Cellular Agent Engine\n**Branch:** `phase-3-simplification`\n**Status:** ✅ Production Auth Complete\n**Location:** `C:\\Users\\casey\\polln\\claw`\n\n**Completed:**\n- ✅ 163 tests (up from 152)\n- ✅ Production authentication system\n  - API key generation with SHA-256 hashing\n  - 6 scopes (AgentRead, AgentWrite, AgentDelete, EquipmentManage, WebSocketConnect, Admin)\n  - Rate limiting per key\n  - JWT + API key dual auth\n- ✅ WebSocket authentication protocol\n- ✅ Professional documentation (README, DISCLAIMERS, BENCHMARKS, TUTORIAL)\n\n**Success Metrics:**\n- ✅ 407-line core loop (target: <500)\n- ✅ ~10ms trigger latency (target: <100ms)\n- ✅ ~2MB memory per agent (target: <10MB)\n- ✅ All 6 equipment slots working\n\n---\n\n### spreadsheet-moment/ - Agent Spreadsheet Platform\n**Branch:** `week-5-testing-validation`\n**Status:** ✅ Integration Progress\n**Location:** `C:\\Users\\casey\\polln\\spreadsheet-moment`\n\n**Completed:**\n- ✅ 219 tests passing (81.4% pass rate)\n- ✅ TypeScript errors reduced from 100+ to 3 (non-blocking Univer issues)\n- ✅ Fixed state transitions, type definitions\n- ✅ Professional documentation (README, DISCLAIMERS, BENCHMARKS)\n- ✅ Claw integration components validated\n\n**Remaining:**\n- 49 failing tests (mostly monitoring/API)\n- 3 TypeScript errors (Univer compatibility)\n- E2E test expansion\n\n---\n\n### dodecet-encoder/ - 12-Bit Geometric Encoding\n**Branch:** `main`\n**Status:** ✅ Ready for Publication\n**Location:** `C:\\Users\\casey\\polln\\dodecet-encoder`\n\n**Completed:**\n- ✅ 170 tests (100% passing)\n- ✅ Zero compilation warnings\n- ✅ Professional documentation\n- ✅ Cargo.toml ready for crates.io\n- ✅ package.json ready for npm\n- ✅ GETTING_STARTED_GUIDE.md\n- ✅ RELEASE_CHECKLIST.md\n- ✅ INTEGRATION_EXAMPLES.md\n\n**Ready to Publish:**\n```bash\ncargo publish                    # crates.io\ncd wasm && npm publish --access public  # npm\n```\n\n---\n\n### SuperInstance-papers/ - Research Publications\n**Branch:** `papers-main`\n**Status:** ✅ 4 New Papers Published\n**Location:** `C:\\Users\\casey\\polln\\SuperInstance-papers`\n\n**Papers Created:**\n1. **\"Deterministic Computation via Geometric Constraints\"** (3,500+ words)\n2. **\"12-Bit Geometric Encoding for Memory-Efficient Vector Operations\"** (4,000+ words)\n3. **\"Origin-Centric Design for Agent-Based Systems\"** (3,800+ words)\n4. **\"Cellular Agent Architecture for Spreadsheet Environments\"** (4,200+ words)\n\n---\n\n## Cross-Repository Integration\n\n### The Three-Repo Ecosystem\n\n```\n┌─────────────────────────────────────────────────────────────────────┐\n│                    SUPERINSTANCE CELLULAR ECOSYSTEM                   │\n├─────────────────────────────────────────────────────────────────────┤\n│                                                                       │\n│  ┌──────────────────┐      ┌──────────────────┐      ┌────────────┐ │\n│  │  constrainttheory│      │ spreadsheet-/    │      │   claw/    │ │\n│  │  (Geometric      │─────►│ moment/          │◄────►│ (Agent     │ │\n│  │   Substrate)     │      │ (Cell Platform)  │      │  Engine)   │ │\n│  │                  │      │                  │      │            │ │\n│  │  • Dodecet enc.  │      │  • Univer base   │      │  • Agents  │ │\n│  │  • KD-tree index │      │  • Cell UI       │      │  • Bots    │ │\n│  │  • FPS paradigm  │      │  • Integration   │      │  • Seeds   │ │\n│  └──────────────────┘      └──────────────────┘      └────────────┘ │\n│           ▲                                                   │       │\n│           │                                                   │       │\n│           ▼                                                   │       │\n│  ┌──────────────────┐                                         │       │\n│  │ dodecet-encoder/ │                                         │       │\n│  │ (12-bit Encoding)│                                         │       │\n│  │                  │                                         │       │\n│  │  • WASM package  │                                         │       │\n│  │  • Rust crate    │                                         │       │\n│  │  • npm package   │                                         │       │\n│  └──────────────────┘                                         │       │\n│                                                                       │\n└─────────────────────────────────────────────────────────────────────┘\n```\n\n### Integration Contracts\n- **constrainttheory → spreadsheet-moment**: Geometric encoding, spatia\n\n[...truncated CLAUDE.md: 12,239 chars total]\n\n[Subdirectory context discovered: polln\\claw\\CLAUDE.md]\nAGENTS.md",
+          "tool_call_id": "chatcmpl-tool-87e03d40a089f213"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-bd0590b03d46a8d8",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"ls -la C:/Users/casey/polln/claw/Cargo.toml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"ls: cannot access 'C:/Users/casey/polln/claw/Cargo.toml': No such file or directory\", \"exit_code\": 2, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-bd0590b03d46a8d8"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-a90d443c8120897e",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"ls -la /c/Users/casey/polln/claw/\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"total 2389\\ndrwxr-xr-x 1 casey 197609      0 Aug 16 23:07 .\\ndrwxr-xr-x 1 casey 197609      0 Aug 16 23:07 ..\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 .agent\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 .agents\\ndrwxr-xr-x 1 casey 197609      0 Aug  9 09:34 .archive\\n-rw-r--r-- 1 casey 197609   2375 Mar 15 17:52 .detect-secrets.cfg\\n-rw-r--r-- 1 casey 197609   1209 Mar 15 17:52 .dockerignore\\n-rw-r--r-- 1 casey 197609   2959 Mar 15 17:52 .env.example\\n-rw-r--r-- 1 casey 197609     78 Mar 15 17:52 .gitattributes\\ndrwxr-xr-x 1 casey 197609      0 Jul 16 07:17 .github\\n-rw-r--r-- 1 casey 197609   2522 Jul 20 10:34 .gitignore\\n-rw-r--r-- 1 casey 197609    270 Mar 15 17:52 .jscpd.json\\n-rw-r--r-- 1 casey 197609   1045 Mar 15 17:52 .mailmap\\n-rw-r--r-- 1 casey 197609    975 Mar 15 17:52 .markdownlint-cli2.jsonc\\n-rw-r--r-- 1 casey 197609     17 Mar 15 17:52 .npmignore\\n-rw-r--r-- 1 casey 197609     83 Mar 15 17:52 .npmrc\\n-rw-r--r-- 1 casey 197609    544 Mar 15 17:52 .oxfmtrc.jsonc\\n-rw-r--r-- 1 casey 197609   1110 Mar 15 17:52 .oxlintrc.json\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 .pi\\n-rw-r--r-- 1 casey 197609   5253 Mar 15 17:52 .pre-commit-config.yaml\\n-rw-r--r-- 1 casey 197609     17 Mar 15 17:52 .prettierignore\\n-rw-r--r-- 1 casey 197609 433339 Mar 15 17:52 .secrets.baseline\\n-rw-r--r-- 1 casey 197609    743 Mar 15 17:52 .shellcheckrc\\n-rw-r--r-- 1 casey 197609   1121 Mar 15 17:52 .swiftformat\\n-rw-r--r-- 1 casey 197609   2968 Mar 15 17:52 .swiftlint.yml\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 .vscode\\n-rw-r--r-- 1 casey 197609  50893 Mar 15 17:52 appcast.xml\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 assets\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 changelog\\n-rw-r--r-- 1 casey 197609 757950 Mar 15 17:52 CHANGELOG.md\\n-rw-r--r-- 1 casey 197609      9 Mar 19 01:52 CLAUDE.md\\n-rw-r--r-- 1 casey 197609   4154 Jul 22 06:54 CLAW_ONBOARDING.md\\n-rw-r--r-- 1 casey 197609  10206 Mar 15 17:52 CONTRIBUTING.md\\ndrwxr-xr-x 1 casey 197609      0 Jul 16 07:17 core\\ndrwxr-xr-x 1 casey 197609      0 Aug 10 20:54 core_rust\\ndrwxr-xr-x 1 casey 197609      0 Mar 18 17:08 dist\\n-rw-r--r-- 1 casey 197609   2585 Mar 15 17:52 docker-compose.yml\\n-rw-r--r-- 1 casey 197609  12512 Mar 15 17:52 Dockerfile\\n-rw-r--r-- 1 casey 197609    688 Mar 15 17:52 Dockerfile.sandbox\\n-rw-r--r-- 1 casey 197609    932 Mar 15 17:52 Dockerfile.sandbox-browser\\n-rw-r--r-- 1 casey 197609   2039 Mar 15 17:52 Dockerfile.sandbox-common\\n-rwxr-xr-x 1 casey 197609  21154 Mar 15 17:52 docker-setup.sh\\ndrwxr-xr-x 1 casey 197609      0 Aug 17 07:24 docs\\n-rw-r--r-- 1 casey 197609   1166 Mar 15 17:52 fly.private.toml\\n-rw-r--r-- 1 casey 197609    773 Mar 15 17:52 fly.toml\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 git-hooks\\n-rw-r--r-- 1 casey 197609   3027 Mar 15 17:52 knip.config.ts\\n-rw-r--r-- 1 casey 197609   1074 Mar 15 17:52 LICENSE\\ndrwxr-xr-x 1 casey 197609      0 Jul 20 10:34 memory\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 21:03 node_modules\\n-rwxr-xr-x 1 casey 197609   2356 Mar 15 17:52 openclaw.mjs\\n-rw-r--r-- 1 casey 197609    889 Mar 15 17:52 openclaw.podman.env\\n-rw-r--r-- 1 casey 197609  24018 Jul 16 07:17 package.json\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 packages\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 patches\\n-rw-r--r-- 1 casey 197609 473421 Mar 16 09:01 pnpm-lock.yaml\\n-rw-r--r-- 1 casey 197609    294 Mar 15 17:52 pnpm-workspace.yaml\\n-rw-r--r-- 1 casey 197609    193 Mar 15 17:52 pyproject.toml\\n-rw-r--r-- 1 casey 197609    188 Aug  9 09:37 README.md\\n-rw-r--r-- 1 casey 197609    480 Mar 15 17:52 render.yaml\\ndrwxr-xr-x 1 casey 197609      0 Aug 13 14:22 schemas\\ndrwxr-xr-x 1 casey 197609      0 Jul 20 19:01 schemas_gold_standard\\ndrwxr-xr-x 1 casey 197609      0 Jul 16 07:17 scripts\\n-rw-r--r-- 1 casey 197609  22640 Mar 15 17:52 SECURITY.md\\n-rwxr-xr-x 1 casey 197609  11347 Mar 15 17:52 setup-podman.sh\\ndrwxr-xr-x 1 casey 197609      0 Jul 20 10:34 skills\\n-rw-r--r-- 1 casey 197609   3289 Aug 12 19:33 social_kinetic_mapping.json\\ndrwxr-xr-x 1 casey 197609      0 Aug 16 23:44 src\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 Swabble\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 test\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 test-fixtures\\ndrwxr-xr-x 1 casey 197609      0 Mar 17 18:13 tools\\n-rw-r--r-- 1 casey 197609    948 Jul 16 07:17 tsconfig.json\\n-rw-r--r-- 1 casey 197609   1917 Mar 15 17:52 tsconfig.plugin-sdk.dts.json\\n-rw-r--r-- 1 casey 197609   5556 Mar 16 09:01 tsdown.config.ts\\ndrwxr-xr-x 1 casey 197609      0 Jul 16 07:17 ui\\ndrwxr-xr-x 1 casey 197609      0 Mar 15 17:52 vendor\\n-rw-r--r-- 1 casey 197609   4637 Mar 15 17:52 VISION.md\\n-rw-r--r-- 1 casey 197609    462 Mar 15 17:52 vitest.channel-paths.mjs\\n-rw-r--r-- 1 casey 197609    233 Mar 15 17:52 vitest.channels.config.ts\\n-rw-r--r-- 1 casey 197609   6063 Mar 15 17:52 vitest.config.ts\\n-rw-r--r-- 1 casey 197609   1331 Mar 15 17:52 vitest.e2e.config.ts\\n-rw-r--r-- 1 casey 197609    479 Mar 15 17:52 vitest.extensions.config.ts\\n-rw-r--r-- 1 casey 197609    142 Mar 15 17:52 vitest.gateway.config.ts\\n-rw-r--r-- 1 casey 197609    467 Mar 15 17:52 vitest.live.config.ts\\n-rw-r--r-- 1 casey 197609    526 Mar 15 17:52 vitest.scoped-config.ts\\n-rw-r--r-- 1 casey 197609    766 Mar 15 17:52 vitest.unit.config.ts\\n-rw-r--r-- 1 casey 197609    524 Mar 15 17:52 zizmor.yml\", \"exit_code\": 0, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-a90d443c8120897e"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-9b8854e2e5a316d8",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"ls -la /c/Users/casey/polln/claw/core_rust/\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"total 61\\ndrwxr-xr-x 1 casey 197609     0 Aug 10 20:54 .\\ndrwxr-xr-x 1 casey 197609     0 Aug 16 23:07 ..\\n-rw-r--r-- 1 casey 197609 14864 Aug  8 09:39 Cargo.lock\\n-rw-r--r-- 1 casey 197609   305 Aug  8 09:41 Cargo.toml\\ndrwxr-xr-x 1 casey 197609     0 Aug 10 20:53 src\\ndrwxr-xr-x 1 casey 197609     0 Aug 10 20:54 target\\ndrwxr-xr-x 1 casey 197609     0 Aug 10 20:54 tests\", \"exit_code\": 0, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-9b8854e2e5a316d8"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-87c2499e0a476f78",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cargo test -- --help,workdir: C:\\\\Users\\\\casey\\\\polln\\\\claw\\\\core_rust\\\\\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"error: failed to determine package fingerprint for build script for cudaclaw v0.1.0 (C:\\\\Users\\\\casey)\\nAn I/O error happened. Please make sure you can access the file.\\n\\nBy default, if your project contains a build script, cargo scans all files in\\nit to determine whether a rebuild is needed. If you don't expect to access the\\nfile, specify `rerun-if-changed` in your build script.\\nSee https://doc.rust-lang.org/cargo/reference/build-scripts.html#rerun-if-changed for more information.\\n\\nCaused by:\\n  failed to determine the most recently modified file in C:\\\\Users\\\\casey\\n\\nCaused by:\\n  failed to determine list of files in C:\\\\Users\\\\casey\\n\\nCaused by:\\n  Access is denied. (os error 5)\\n\\nCaused by:\\n  Access is denied. (os error 5)\", \"exit_code\": 101, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-87c2499e0a476f78"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-944222ff59ee8e14",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cargo test --version,workdir: C:\\\\Users\\\\casey\\\\polln\\\\claw\\\\core_rust\\\\\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"error: unexpected argument '--version,workdir:' found\\n\\n  tip: to pass '--version,workdir:' as a value, use '-- --version,workdir:'\\n\\nUsage: cargo.exe test [OPTIONS] [TESTNAME] [-- [ARGS]...]\\n\\nFor more information, try '--help'.\", \"exit_code\": 1, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-944222ff59ee8e14"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-b69984d421383b8b",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cargo test --version,workdir: C:\\\\Users\\\\casey\\\\polln\\\\claw\\\\core_rust\\\\\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"error: unexpected argument '--version,workdir:' found\\n\\n  tip: to pass '--version,workdir:' as a value, use '-- --version,workdir:'\\n\\nUsage: cargo.exe test [OPTIONS] [TESTNAME] [-- [ARGS]...]\\n\\nFor more information, try '--help'.\", \"exit_code\": 1, \"error\": null}\n\n[Tool loop warning: repeated_exact_failure_warning; count=2; terminal has failed 2 times with identical arguments. This looks like a loop; inspect the error and change strategy instead of retrying it unchanged.]",
+          "tool_call_id": "chatcmpl-tool-b69984d421383b8b"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-8759b0fd407a9012",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cargo --version\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"cargo 1.97.0 (c980f4866 2026-06-30)\", \"exit_code\": 0, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-8759b0fd407a9012"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-bde23e23dc894752",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cargo test,workdir: C:\\\\Users\\\\casey\\\\polln\\\\claw\\\\core_rust\\\\\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"error: no such command: `test,workdir:`\\n\\nhelp: view all installed commands with `cargo --list`\\nhelp: find a package to install `test,workdir:` with `cargo search cargo-test,workdir:`\", \"exit_code\": 101, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-bde23e23dc894752"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-8609354bef21cc95",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cd C:/Users/casey/polln/claw/core_rust && cargo test\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"Compiling core_rust v0.1.0 (C:\\\\Users\\\\casey\\\\polln\\\\claw\\\\core_rust)\\nerror[E0433]: cannot find module or crate `core_rust` in this scope\\n --> tests\\\\consensus_tests.rs:1:5\\n  |\\n1 | use core_rust::core::consensus::tripartite::*;\\n  |     ^^^^^^^^^ use of unresolved module or unlinked crate `core_rust`\\n  |\\n  = help: if you wanted to use a crate named `core_rust`, use `cargo add core_rust` to add it to your `Cargo.toml`\\n\\nerror[E0422]: cannot find struct, variant or union type `TripartiteConsensusEngine` in this scope\\n --> tests\\\\consensus_tests.rs:5:18\\n  |\\n5 |     let engine = TripartiteConsensusEngine { threshold: ResonanceScore::new(0.5) };\\n  |                  ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope\\n\\nerror[E0422]: cannot find struct, variant or union type `TripartiteConsensusEngine` in this scope\\n  --> tests\\\\consensus_tests.rs:14:18\\n   |\\n14 |     let engine = TripartiteConsensusEngine { threshold: ResonanceScore::new(0.7) };\\n   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n --> tests\\\\consensus_tests.rs:5:57\\n  |\\n5 |     let engine = TripartiteConsensusEngine { threshold: ResonanceScore::new(0.5) };\\n  |                                                         ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n --> tests\\\\consensus_tests.rs:6:13\\n  |\\n6 |     let s = ResonanceScore::new(1.0);\\n  |             ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n --> tests\\\\consensus_tests.rs:7:14\\n  |\\n7 |     let an = ResonanceScore::new(1.0);\\n  |              ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n --> tests\\\\consensus_tests.rs:8:14\\n  |\\n8 |     let ac = ResonanceScore::new(1.0);\\n  |              ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n --> tests\\\\consensus_tests.rs:9:55\\n  |\\n9 |     assert_eq!(engine.calculate_resonance(s, an, ac), ResonanceScore::new(1.0));\\n  |                                                       ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n  --> tests\\\\consensus_tests.rs:14:57\\n   |\\n14 |     let engine = TripartiteConsensusEngine { threshold: ResonanceScore::new(0.7) };\\n   |                                                         ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n  --> tests\\\\consensus_tests.rs:18:9\\n   |\\n18 |         ResonanceScore::new(0.8),\\n   |         ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n  --> tests\\\\consensus_tests.rs:19:9\\n   |\\n19 |         ResonanceScore::new(0.8),\\n   |         ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n  --> tests\\\\consensus_tests.rs:20:9\\n   |\\n20 |         ResonanceScore::new(0.8)\\n   |         ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n  --> tests\\\\consensus_tests.rs:25:9\\n   |\\n25 |         ResonanceScore::new(0.2),\\n   |         ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n  --> tests\\\\consensus_tests.rs:26:9\\n   |\\n26 |         ResonanceScore::new(0.2),\\n   |         ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nerror[E0433]: cannot find type `ResonanceScore` in this scope\\n  --> tests\\\\consensus_tests.rs:27:9\\n   |\\n27 |         ResonanceScore::new(0.2)\\n   |         ^^^^^^^^^^^^^^ use of undeclared type `ResonanceScore`\\n\\nSome errors have detailed explanations: E0422, E0433.\\nFor more information about an error, try `rustc --explain E0422`.\\nerror: could not compile `core_rust` (test \\\"consensus_tests\\\") due to 15 previous errors\", \"exit_code\": 101, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-8609354bef21cc95"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-87889a6ae5325e0b",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cat C:/Users/casey/polln/claw/core_rust/src/lib.rs\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"cat: 'C:/Users/casey/polln/claw/core_rust/src/lib.rs': No such file or directory\", \"exit_code\": 1, \"error\": null}\n\n[Tool loop warning: same_tool_failure_warning; count=3; terminal has failed 3 times this turn. This looks like a loop. Do not switch to text-only replies; keep using tools, but diagnose before retrying. First inspect the latest error/output and verify your assumptions. For terminal failures, run a small diagnostic such as `pwd && ls -la` in the same tool, then try an absolute path, a simpler command, a different working directory, or a different tool such as read_file/write_file/patch.]",
+          "tool_call_id": "chatcmpl-tool-87889a6ae5325e0b"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-b0e452826604b86a",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"ls -R C:/Users/casey/polln/claw/core_rust/src/\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"C:/Users/casey/polln/claw/core_rust/src/:\\ncore\\nmain.rs\\nmodels.rs\\n\\nC:/Users/casey/polln/claw/core_rust/src/core:\\nconsensus\\nmod.rs\\n\\nC:/Users/casey/polln/claw/core_rust/src/core/consensus:\\nmod.rs\", \"exit_code\": 0, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-b0e452826604b86a"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-b0d6f2322f29f35d",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cat C:/Users/casey/polln/claw/core_rust/src/core/consensus/mod.rs\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"pub mod tripartite;\", \"exit_code\": 0, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-b0d6f2322f29f35d"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-91190e989fdaffa6",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"cat C:/Users/casey/polln/claw/core_rust/src/core/consensus/tripartite.rs\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"cat: 'C:/Users/casey/polln/claw/core_rust/src/core/consensus/tripartite.rs': No such file or directory\", \"exit_code\": 1, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-91190e989fdaffa6"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-95edaa7d9bead874",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"ls -R C:/Users/casey/polln/claw/core_rust/src/core/consensus/\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"C:/Users/casey/polln/claw/core_rust/src/core/consensus/:\\nmod.rs\", \"exit_code\": 0, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-95edaa7d9bead874"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "chatcmpl-tool-812d3f8a6691cbec",
+              "type": "function",
+              "function": {
+                "name": "terminal",
+                "arguments": "{\"command\":\"ls -R C:/Users/casey/polln/claw/core_rust/src/core/\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "name": "terminal",
+          "content": "{\"output\": \"C:/Users/casey/polln/claw/core_rust/src/core/:\\nconsensus\\nmod.rs\\n\\nC:/Users/casey/polln/claw/core_rust/src/core/consensus:\\nmod.rs\", \"exit_code\": 0, \"error\": null}",
+          "tool_call_id": "chatcmpl-tool-812d3f8a6691cbec"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "process",
+            "description": "Manage background processes started with terminal(background=true). Actions: 'list' (show all), 'poll' (check status + new output), 'log' (full output with pagination), 'wait' (block until done or timeout), 'kill' (terminate), 'write' (send raw stdin data without newline), 'submit' (send data + Enter, for answering prompts), 'close' (close stdin/send EOF).",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "list",
+                    "poll",
+                    "log",
+                    "wait",
+                    "kill",
+                    "write",
+                    "submit",
+                    "close"
+                  ],
+                  "description": "Action to perform on background processes"
+                },
+                "session_id": {
+                  "type": "string",
+                  "description": "Process session ID (from terminal background output). Required for all actions except 'list'."
+                },
+                "data": {
+                  "type": "string",
+                  "description": "Text to send to process stdin (for 'write' and 'submit' actions)"
+                },
+                "timeout": {
+                  "type": "integer",
+                  "description": "Max seconds to block for 'wait' action. Returns partial output on timeout.",
+                  "minimum": 1
+                },
+                "offset": {
+                  "type": "integer",
+                  "description": "Line offset for 'log' action (default: last 200 lines)"
+                },
+                "limit": {
+                  "type": "integer",
+                  "description": "Max lines to return for 'log' action",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "action"
+              ]
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "terminal",
+            "description": "Execute shell commands on a Linux environment. Filesystem usually persists between calls.\n\nDo NOT use cat/head/tail to read files — use read_file instead.\nDo NOT use grep/rg/find to search — use search_files instead.\nDo NOT use ls to list directories — use search_files(target='files') instead.\nDo NOT use sed/awk to edit files — use patch instead.\nDo NOT use echo/cat heredoc to create files — use write_file instead.\nReserve terminal for: builds, installs, git, processes, scripts, network, package managers, and anything that needs a shell.\n\nForeground (default): Commands return INSTANTLY when done, even if the timeout is high. Set timeout=300 for long builds/scripts — you'll still get the result in seconds if it's fast. Prefer foreground for short commands.\nBackground: Set background=true to get a session_id. Almost always pair with notify_on_complete=true — bg without notify runs SILENTLY and you have no way to learn it finished short of calling process(action='poll') yourself. Two legitimate uses:\n  (1) Long-lived processes that never exit (servers, watchers, daemons) — silent is correct, there's no exit to notify on.\n  (2) Long-running bounded tasks (tests, builds, deploys, CI pollers, batch jobs) — MUST set notify_on_complete=true. Without it you'll either forget to poll or sit blocked waiting for the user to surface the result.\nFor servers/watchers, do NOT use shell-level background wrappers (nohup/disown/setsid/trailing '&') in foreground mode. Use background=true so Hermes can track lifecycle and output.\nAfter starting a server, verify readiness with a health check or log signal, then run tests in a separate terminal() call. Avoid blind sleep loops.\nUse process(action=\"poll\") for progress checks, process(action=\"wait\") to block until done.\nWorking directory: Use 'workdir' for per-command cwd.\nPTY mode: Set pty=true for interactive CLI tools (Codex, Claude Code, Python REPL).\n\nDo NOT use vim/nano/interactive tools without pty=true — they hang without a pseudo-terminal. Pipe git output to cat if it might page.\n",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "command": {
+                  "type": "string",
+                  "description": "The command to execute on the VM"
+                },
+                "background": {
+                  "type": "boolean",
+                  "description": "Run the command in the background. Almost always pair with notify_on_complete=true — without it, the process runs silently and you'll have no way to learn it finished short of calling process(action='poll') yourself (easy to forget, leading to silent blindness on long jobs). Two legitimate patterns: (1) Long-lived processes that never exit (servers, watchers, daemons) — these stay silent because there's no exit to notify on. (2) Long-running bounded tasks (tests, builds, deploys, CI pollers, batch jobs) — these MUST set notify_on_complete=true. For short commands, prefer foreground with a generous timeout instead.",
+                  "default": false
+                },
+                "timeout": {
+                  "type": "integer",
+                  "description": "Max seconds to wait (default: 180, foreground max: 600). Returns INSTANTLY when command finishes — set high for long tasks, you won't wait unnecessarily. Foreground timeout above 600s is rejected; use background=true for longer commands.",
+                  "minimum": 1
+                },
+                "workdir": {
+                  "type": "string",
+                  "description": "Working directory for this command (absolute path). Defaults to the session working directory."
+                },
+                "pty": {
+                  "type": "boolean",
+                  "description": "Run in pseudo-terminal (PTY) mode for interactive CLI tools like Codex, Claude Code, or Python REPL. Only works with local and SSH backends. Default: false.",
+                  "default": false
+                },
+                "notify_on_complete": {
+                  "type": "boolean",
+                  "description": "When true (and background=true), you'll be automatically notified exactly once when the process finishes. **This is the right choice for almost every long-running task** — tests, builds, deployments, multi-item batch jobs, anything that takes over a minute and has a defined end. Use this and keep working on other things; the system notifies you on exit. MUTUALLY EXCLUSIVE with watch_patterns — when both are set, watch_patterns is dropped.",
+                  "default": false
+                },
+                "watch_patterns": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Strings to watch for in background process output. HARD RATE LIMIT: at most 1 notification per 15 seconds per process — matches arriving inside the cooldown are dropped. After 3 consecutive 15-second windows with dropped matches, watch_patterns is automatically disabled for that process and promoted to notify_on_complete behavior (one notification on exit, no more mid-process spam). USE ONLY for truly rare, one-shot mid-process signals on LONG-LIVED processes that will never exit on their own — e.g. ['Application startup complete'] on a server so you know when to hit its endpoint, or ['migration done'] on a daemon. DO NOT use for: (1) end-of-run markers like 'DONE'/'PASS' — use notify_on_complete instead; (2) error patterns like 'ERROR'/'Traceback' in loops or multi-item batch jobs — they fire on every iteration and you'll hit the strike limit fast; (3) anything you'd ever combine with notify_on_complete. When in doubt, choose notify_on_complete. MUTUALLY EXCLUSIVE with notify_on_complete — set one, not both."
+                }
+              },
+              "required": [
+                "command"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "error": {
+    "type": "InternalServerError",
+    "message": "<html>\r\n<head><title>502 Bad Gateway</title></head>\r\n<body>\r\n<center><h1>502 Bad Gateway</h1></center>\r\n<hr><center>nginx/1.24.0 (Ubuntu)</center>\r\n</body>\r\n</html>",
+    "status_code": 502,
+    "body": "<html>\r\n<head><title>502 Bad Gateway</title></head>\r\n<body>\r\n<center><h1>502 Bad Gateway</h1></center>\r\n<hr><center>nginx/1.24.0 (Ubuntu)</center>\r\n</body>\r\n</html>",
+    "response_status": 502,
+    "response_text": "<html>\r\n<head><title>502 Bad Gateway</title></head>\r\n<body>\r\n<center><h1>502 Bad Gateway</h1></center>\r\n<hr><center>nginx/1.24.0 (Ubuntu)</center>\r\n</body>\r\n</html>\r\n"
+  }
+}

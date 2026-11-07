@@ -1,0 +1,2 @@
+context_lengths:
+  Qwen/Qwen3-VL-30B-A3B-Instruct@https://api.deepinfra.com/v1/openai: 128000

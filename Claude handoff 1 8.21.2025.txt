@@ -1,0 +1,295 @@
+Claude handoff 1 8.21.2025
+
+Complete ActiveLog.ai Project Brief for Continuation
+Project Overview
+ActiveLog.ai is a modular, AI-integrated data management ecosystem with local-first storage and selective cloud sync. The system learns from user behavior to become a better data curator over time, eventually enabling users to generate full applications from their curated data.
+Current Infrastructure Status
+Environment Setup
+
+Host Machine: ASUS ProArt 13 (AMD Ryzen AI 9 HX 370, RTX 4050, 32GB RAM)
+OS: Windows 10 Home with WSL2 (Ubuntu 22.04 LTS)
+Access Method: Windows → WSL2 → Ubuntu (user: activeloguser)
+Remote Access: Guacamole running at https://guac.capitaineai.com/guacamole
+AWS Infrastructure: VPC created in us-west-2, no NAT gateway (cost optimization)
+
+Working Services Architecture
+Docker Services (All Healthy)
+yaml# Location: ~/activelog/docker-compose.yml
+- PostgreSQL with pgvector (port 5432) - Database with vector support for AI embeddings
+- Redis (port 6379) - Caching and session storage  
+- MinIO (port 9000/9001) - S3-compatible object storage (admin: minioadmin/minioadmin123)
+- Elasticsearch (port 9200) - Search and analytics
+- NATS (port 4222/8222) - Event-driven messaging
+Microservices (All Running)
+
+File Sync Service (~/activelog/services/file-sync/main.py)
+
+Port: 8000
+Features: File upload to MinIO, health checks
+API Docs: http://localhost:8000/docs
+
+
+AI Orchestrator (~/activelog/services/ai-orchestrator/main.py)
+
+Port: 8001
+Features: Plugin registry, file analysis endpoints
+Registered plugins: text-embeddings, image-analysis, code-analysis
+API Docs: http://localhost:8001/docs
+
+
+API Gateway (~/activelog/services/api-gateway/main.py)
+
+Port: 8088 (moved from 8080 due to conflict)
+Features: CORS enabled, service routing, health aggregation
+API Docs: http://localhost:8088/docs
+
+
+Frontend (~/activelog/frontend/)
+
+Port: 3000
+Features: Service health monitoring, file upload interface
+Access: http://localhost:3000
+
+
+
+Automation Scripts
+bash~/activelog/start_activelog.sh  # Starts all services
+~/activelog/stop_activelog.sh   # Stops all services  
+~/activelog/status_activelog.sh # Checks system status
+Project Structure
+~/activelog/
+├── docker-compose.yml
+├── services/
+│   ├── file-sync/
+│   ├── ai-orchestrator/
+│   ├── api-gateway/
+│   ├── auth/           # Skeleton created, not implemented
+│   └── metadata/       # Skeleton created, not implemented
+├── frontend/
+├── logs/              # Service logs
+├── pids/              # Process IDs
+└── scripts/
+    └── init.sql       # Database initialization
+Technical Decisions Made
+Architecture Patterns
+
+Microservices: Each capability as independent service
+Event-driven: NATS for service communication
+API-first: All features exposed via REST APIs
+Local-first: Default to offline storage, selective sync
+Multi-tenant ready: Database schema supports tenant isolation
+
+Technology Stack
+
+Backend: Python/FastAPI for all services
+Database: PostgreSQL with pgvector for embeddings
+Storage: MinIO (S3-compatible) for files
+Cache: Redis for session/cache
+Search: Elasticsearch for full-text search
+Messaging: NATS for event streaming
+Container: Docker Compose for orchestration
+
+Key Design Decisions
+
+No Lambda Stack: Using containerized ML instead for cloud compatibility
+Port 8088 for Gateway: Moved from 8080 due to Tomcat conflict
+WSL2 over VirtualBox: Better performance, native Docker support
+No GPU in dev: VirtualBox doesn't support GPU passthrough; GPU reserved for production
+
+Comprehensive Vision & Requirements
+Core Differentiators
+
+Intelligent Data Curation: AI-powered tagging, classification, semantic search
+User-Learned Grouping: System learns from user patterns to suggest organization
+Local-First with Selective Sync: Users control what syncs to cloud
+Universal AI Integration: Plugin architecture for any AI service
+Edge Deployment Support: Can run on user-managed backends
+
+Sync States Design
+Local-only [L]: File exists only locally
+Cloud-only [C]: File exists only in cloud  
+Synced [S]: File synced between local/cloud
+Conflict [!]: Versions differ
+Pending [⏳]: Awaiting sync
+Use Cases to Support
+
+Batch uploads: SD cards, photo dumps
+Real-time streaming: Camera feeds, live data
+AI processing: Video analysis, code understanding, document curation
+Model training: Custom ML models from curated data
+App generation: Create websites/apps from user data
+
+Plugin System Requirements
+
+Dynamic registration/discovery
+Sandboxed execution
+Capability-based routing
+Resource limits/quotas
+Per-tenant plugin management
+
+Next Development Phases
+Phase 1: Core Completion (Immediate)
+
+Authentication Service (services/auth/)
+
+JWT tokens, user management
+Role-based access control
+Session management
+
+
+Metadata Service (services/metadata/)
+
+File tagging, embeddings storage
+Search functionality
+Relationship mapping
+
+
+Real AI Integration
+
+OpenAI API integration
+Local LLM support (Ollama)
+Whisper for audio transcription
+CLIP/BLIP for image understanding
+
+
+
+Phase 2: Sync Engine
+
+Selective Sync Logic
+
+Per-file/folder/tag rules
+Conflict resolution (CRDT/version vectors)
+Delta/chunked transfers
+Resumable uploads
+
+
+Local Storage Integration
+
+File system monitoring (inotify)
+Local SQLite for offline metadata
+Background sync workers
+
+
+
+Phase 3: Advanced Features
+
+Vector Database Integration
+
+Semantic search across all content
+AI-powered recommendations
+Similarity clustering
+
+
+Plugin Marketplace
+
+Community plugins
+Plugin sandboxing (WebAssembly)
+Version management
+
+
+Edge Federation
+
+Peer-to-peer sync
+Federated learning
+Privacy-preserving ML
+
+
+
+Phase 4: Production Deployment
+AWS Architecture
+yamlLocal Service → AWS Service:
+  PostgreSQL + pgvector → RDS PostgreSQL with pgvector
+  MinIO → S3
+  NATS → Amazon MSK or SQS/SNS
+  Elasticsearch → OpenSearch
+  Redis → ElastiCache
+  File-Sync → EFS + Lambda
+  AI-Orchestrator → ECS Fargate with GPU
+Cost Optimization
+
+Development: ~$0/month (no NAT gateway)
+Testing: ~$50/month (t3.micro instances)
+Production: ~$500-1000/month (GPU instances)
+
+Critical Implementation Details
+Database Schema (PostgreSQL)
+sql-- Already initialized in ~/activelog/scripts/init.sql
+- tenants table (multi-tenancy)
+- users table (per-tenant users)
+- files table (with vector embeddings)
+- Row-level security enabled
+API Endpoints Structure
+GET/POST /api/v1/assets/:id
+POST /api/v1/assets/:id/sync
+POST /api/v2/plugins/:plugin_id/register
+WebSocket /api/v1/events/subscribe
+Security Considerations
+
+JWT authentication ready to implement
+CORS enabled on gateway
+Per-tenant isolation in database
+Service-to-service authentication needed
+Rate limiting to be added
+
+Known Issues & Solutions
+Current Limitations
+
+No persistent storage: Services use in-memory storage
+No real AI models: Plugins are mocked
+No authentication: All endpoints are public
+Manual sync only: No automatic sync engine
+Basic frontend: Minimal UI functionality
+
+Port Allocations
+3000 - Frontend
+8000 - File Sync Service
+8001 - AI Orchestrator
+8002 - Auth Service (reserved)
+8003 - Metadata Service (reserved)
+8088 - API Gateway (moved from 8080)
+9000 - MinIO API
+9001 - MinIO Console
+5432 - PostgreSQL
+6379 - Redis
+9200 - Elasticsearch
+4222 - NATS
+Commands for Quick Access
+WSL Access
+powershellwsl -d Ubuntu-22.04 -u root
+su - activeloguser
+Service Management
+bash~/activelog/start_activelog.sh   # Start everything
+~/activelog/stop_activelog.sh    # Stop everything
+~/activelog/status_activelog.sh  # Check status
+tail -f ~/activelog/logs/*.log   # View logs
+Testing Endpoints
+bashcurl http://localhost:8000/health
+curl http://localhost:8001/plugins
+curl http://localhost:8088/health
+Vision for Future Use Cases
+CareLog.ai / ClinicLog.ai
+The modular architecture supports vertical-specific implementations:
+
+Healthcare data compliance (HIPAA)
+Medical image analysis plugins
+Patient data sovereignty
+Federated learning for privacy
+
+Key Success Metrics
+
+User data remains sovereign (local-first)
+Plugins integrate seamlessly
+System learns and improves curation
+Scales from single user to enterprise
+Deploys identically local/cloud/edge
+
+Immediate Next Steps for New Session
+
+Implement Authentication: Complete JWT auth service
+Add OpenAI Integration: Real AI capabilities
+Build Sync Engine: Selective sync with conflict resolution
+Create Vector Search: Semantic search across content
+Develop Plugin SDK: Enable community contributions
+Production Deployment: AWS infrastructure with GPU
+
+The system is currently healthy and running. All core infrastructure is operational. The next phase is adding real AI capabilities and authentication to move from prototype to production-ready platform.

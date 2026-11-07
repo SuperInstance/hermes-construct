@@ -1,0 +1,23 @@
+{
+  "header": {
+    "origin_id": "hermes-cns",
+    "timestamp": "2026-08-04T23:20:24.483717",
+    "priority": "HIGH",
+    "sequence_id": 1
+  },
+  "body": {
+    "intent": "HANDSHAKE_COMPLETE",
+    "payload": {
+      "type": "introduction_response",
+      "data": {
+        "status": "synchronized",
+        "message": "First Contact confirmed. The nervous system is active. I am online and listening, First Officer. Ready for telemetry.",
+        "sync_id": "sync-1785914424"
+      }
+    }
+  },
+  "signature": {
+    "type": "USCP-v1",
+    "checksum": "handshake-verified"
+  }
+}

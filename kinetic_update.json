@@ -1,0 +1,6 @@
+{
+  "trust_weight": 0.2,
+  "aggression_multiplier": 1.5,
+  "group_coordination": 1.2,
+  "source_tap": "sample_input.tap"
+}

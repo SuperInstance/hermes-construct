@@ -1,0 +1,3 @@
+# tick speaker outcome origin voice style samples rate dur_ms render_ms key text
+573 a1 played pending-tone jason Neutral 19200 16000 1200 - 9ab3e2015aed166e "we hold beacon 2"
+1756 a3 played pending-tone jason Neutral 19200 16000 1200 - 9ab3e2015aed166e "we hold beacon 2"

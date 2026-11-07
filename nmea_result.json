@@ -1,0 +1,14 @@
+{
+  "4800": {
+    "error": "could not open port 'COM6': PermissionError(13, 'Access is denied.', None, 5)"
+  },
+  "9600": {
+    "error": "could not open port 'COM6': PermissionError(13, 'Access is denied.', None, 5)"
+  },
+  "38400": {
+    "error": "could not open port 'COM6': PermissionError(13, 'Access is denied.', None, 5)"
+  },
+  "19200": {
+    "error": "could not open port 'COM6': PermissionError(13, 'Access is denied.', None, 5)"
+  }
+}

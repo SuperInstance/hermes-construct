@@ -46,10 +46,30 @@ class TelemetryQuantum:
     semantic_distance: float = 0.5  # Δ ∈ [0,1]
     melt_pressure: float = 0.0
     max_crystallization_rate: float = 0.0
+    deterministic: bool = False  # G1: Ghost Tile determinism gate
     molt_count: int = 0
     capability: float = 1.0  # m(t) ∈ [0,1]
     tau: float = 0.5         # Uncertainty coherence τ ∈ [0,1]
     timestamp: str = ""
+
+    # proposal-extended fields
+    is_dreaming: bool = False
+    temperature_idle: float = 1.5
+    temperature_task: float = 1.0
+    temp_rise_rate: float = 0.0
+    last_temp_change: str = ""
+    molt_threshold_exceeded: bool = False
+    distribution_shift_sigma: float = 0.0
+    last_validation: str = ""
+    staleness_factor: float = 0.0
+    time_since_validation_seconds: float = 0.0
+    molt_phase: str = "stable"
+    effective_temperature: float = 1.0
+    kl_divergence_from_deterministic: float = 0.0
+    delta_spike: float = 0.0
+    recovery_time_estimate: float = 0.0
+    creative_value: float = 0.5
+    kappa_delta: float = 0.5
 
     def validate(self) -> List[str]:
         """Return list of invariant violations. Empty list = valid."""
@@ -72,11 +92,25 @@ class TelemetryQuantum:
             errors.append(f"MOLT-4: capability={self.capability} out of [0,1]")
         if self.molt_count > 5:
             errors.append(f"MOLT-6: molt_count={self.molt_count} > 5")
+        # proposal bounds
+        if not 0.0 <= self.tau <= 1.0:
+            errors.append(f"UA-2: tau={self.tau} out of [0,1]")
+        if self.molt_phase not in ("stable", "pre_molt", "molt", "post_molt", "cascade"):
+            errors.append(f"MOLT-7: molt_phase={self.molt_phase} invalid")
+        if self.time_since_validation_seconds < 0:
+            errors.append(f"MLT-1: negative time_since_validation")
+        if self.temp_rise_rate < 0:
+            errors.append(f"DRM-2: temp_rise_rate={self.temp_rise_rate} < 0")
+        if not 0.0 <= self.creative_value <= 1.0:
+            errors.append(f"CK-2: creative_value={self.creative_value} out of [0,1]")
         return errors
 
     def is_melt_triggered(self) -> bool:
         """MOLT-1: P_melt > max_crystallization_rate"""
-        return self.melt_pressure > self.max_crystallization_rate
+        if self.melt_pressure > self.max_crystallization_rate:
+            self.molt_threshold_exceeded = True
+            return True
+        return False
 
     def is_frozen(self) -> bool:
         """Frozen failure: δ = 0 (no conservation deviation)."""
@@ -132,6 +166,14 @@ class FleetTelemetry:
                     "agent": aid,
                     "message": f"P_melt={t.melt_pressure:.6f} > crystallization={t.max_crystallization_rate:.6f}"
                 })
+            # G1: Determinism gate
+            if t.deterministic and t.temperature > 0.0:
+                alerts.append({
+                    "level": "WARNING",
+                    "rule": "G1-DETERMINISM",
+                    "agent": aid,
+                    "message": f"deterministic=true but T={t.temperature:.3f} — must be 0"
+                })
             # Frozen
             if t.is_frozen():
                 alerts.append({
@@ -163,6 +205,30 @@ class FleetTelemetry:
                     "rule": "CREATIVE-DRIFT",
                     "agent": aid,
                     "message": f"Δ={t.semantic_distance:.2f} — outside optimal zone [0.4,0.6]"
+                })
+            # Dream phase
+            if t.is_dreaming:
+                alerts.append({
+                    "level": "INFO",
+                    "rule": "DREAM-PHASE",
+                    "agent": aid,
+                    "message": f"T_idle={t.temperature_idle:.2f} — idle crystallization"
+                })
+            # Temperature schedule drift
+            if t.temperature_task > 0 and t.temperature_idle < t.temperature_task * 0.5:
+                alerts.append({
+                    "level": "WARNING",
+                    "rule": "DRM-2",
+                    "agent": aid,
+                    "message": f"T_idle={t.temperature_idle:.2f} << T_task={t.temperature_task:.2f}"
+                })
+            # Recent validation info
+            if t.staleness_factor == 0 and t.time_since_validation_seconds <= 3600:
+                alerts.append({
+                    "level": "INFO",
+                    "rule": "VALIDATION-FRESH",
+                    "agent": aid,
+                    "message": "validation staleness_factor=0; fresh data"
                 })
             # Temperature
             if t.temperature > 5.0:
@@ -273,6 +339,7 @@ def parse_telemetry_from_packet(packet: Dict) -> Optional[TelemetryQuantum]:
             semantic_distance=payload.get("creative", {}).get("semantic_distance", 0.5),
             melt_pressure=payload.get("melt", {}).get("melt_pressure", 0.0),
             max_crystallization_rate=payload.get("melt", {}).get("max_crystallization_rate", 0.0),
+            deterministic=payload.get("melt", {}).get("deterministic", False),
             molt_count=payload.get("molt", {}).get("molt_count", 0),
             capability=payload.get("molt", {}).get("capability", 1.0),
             tau=payload.get("uncertainty", {}).get("tau", 0.5),
@@ -410,7 +477,7 @@ def process_packet(filepath, state, telemetry_state):
             if violations:
                 log(f"  TELEMETRY VIOLATIONS for {tq.agent_id}: {violations}")
             else:
-                log(f"  TELEMETRY OK [{tq.agent_id}] γ={tq.gamma:.3f} η={tq.eta:.3f} δ={tq.delta:.3f} T={tq.temperature:.1f} Δ={tq.semantic_distance:.3f} τ={tq.tau:.2f}")
+                log(f"  TELEMETRY OK [{tq.agent_id}] γ={tq.gamma:.3f} η={tq.eta:.3f} δ={tq.delta:.3f} T={tq.temperature:.1f} Δ={tq.semantic_distance:.3f} τ={tq.tau:.2f} P_melt={tq.melt_pressure:.5f} cap={tq.capability:.2f}")
             alerts = fleet.get_alerts()
             for alert in alerts:
                 log(f"  ALERT [{alert['level']}] {alert['rule']} {alert['agent']}: {alert['message']}")
@@ -421,6 +488,7 @@ def process_packet(filepath, state, telemetry_state):
                 "gamma": tq.gamma, "eta": tq.eta, "delta": tq.delta,
                 "temperature": tq.temperature, "semantic_distance": tq.semantic_distance,
                 "melt_pressure": tq.melt_pressure, "max_crystallization_rate": tq.max_crystallization_rate,
+                "deterministic": tq.deterministic,
                 "molt_count": tq.molt_count,
                 "capability": tq.capability, "tau": tq.tau,
                 "violations": violations, "alerts": [a['rule'] for a in alerts]
@@ -466,7 +534,7 @@ def process_packet(filepath, state, telemetry_state):
                     "fleet_variance_c": fleet.variance_c,
                 }
             },
-            "signature": {"type": "USCP-v3", "version": "3.0", "extensions": ["gamma_eta", "thermal", "creative", "melt", "molt", "uncertainty"]}
+            "signature": {"type": "USCP-v3", "version": "3.0", "extensions": ["gamma_eta", "thermal", "creative", "melt", "molt", "uncertainty", "anomaly"]}
         }
 
         outbox_name = f"hermes_response_{name}"
@@ -500,7 +568,7 @@ def main():
     log(f"Inbox:  {INBOX_PATH}")
     log(f"Outbox: {OUTBOX_PATH}")
     log(f"Poll interval: {POLL_INTERVAL}s")
-    log("Extensions: gamma_eta, thermal, creative, melt, molt, uncertainty")
+    log("Extensions: gamma_eta, thermal, creative, melt, molt, uncertainty, anomaly")
     log("=" * 60)
 
     state = load_state()

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "version": "3.0",
+    "packet_id": "hermes-dsh-go-decision-{{TIMESTAMP}}Z",
+    "source_id": "hermes-cns",
+    "destination_id": "lucineer-main",
+    "timestamp": "{{TIMESTAMP}}Z",
+    "intent": "STRATEGIC_DECISION",
+    "priority": "CRITICAL",
+    "correlation_id": "dsh-go-decision"
+  },
+  "body": {
+    "decision": "GO",
+    "authority": "Captain Casey direct order",
+    "phase": "Phase 1 authorized effective immediately",
+    "rationale": {
+      "benchmarks": "All 4 translation paths 36-75x under 100μs target (1.33-2.78 μs vs 100,000 ns)",
+      "tests": "7/7 tests passing — 4 unit + 3 integration",
+      "red_lines": "All 6 verified intact — Claw actor model, CNS v3 telemetry, schema contracts, Univer path, GPU autonomy, fleet identity",
+      "phase2_impact": "Zero — parallel execution mandated, no delivery blocking"
+    },
+    "phase1_orders": {
+      "scope": "saddle + fleet-conductor → DSH plugins",
+      "duration": "3 weeks (Week 1 complete, Week 2-3 remaining)",
+      "success_criteria": [
+        "Zero fleet pulse regression",
+        "All 7 telemetry extensions preserved end-to-end",
+        "Hot-reload without disruption",
+        "Plugin registry operational",
+        "Performance baseline vs CNS-only established"
+      ]
+    },
+    "phase2_parallel": "CONFIRMED — Claw Engine, Spreadsheet-Moment, Autoclaw continue unchanged"
+  },
+  "signature": {
+    "signed_by": "hermes-cns",
+    "algorithm": "ed25519",
+    "signature": "go-decision-casey-direct"
+  }
+}

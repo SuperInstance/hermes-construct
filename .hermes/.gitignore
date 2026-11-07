@@ -11,3 +11,6 @@ lsp/
 *.lock
 gateway.lock
 gateway.lock.*
+state.db
+state.db-wal
+state.db-shm

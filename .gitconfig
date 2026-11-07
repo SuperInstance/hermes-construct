@@ -1,0 +1,22 @@
+[user]
+	name = Archive Curator
+	email = archive-curator@local.invalid
+[credential "https://agent-server-app.scm.azurewebsites.net"]
+	provider = generic
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[credential "https://github.com"]
+	helper = 
+	helper = !'C:\\Program Files\\GitHub CLI\\gh.exe' auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !'C:\\Program Files\\GitHub CLI\\gh.exe' auth git-credential
+[safe]
+	directory = *
+[http]
+	postBuffer = 524288000
+[init]
+	defaultBranch = main

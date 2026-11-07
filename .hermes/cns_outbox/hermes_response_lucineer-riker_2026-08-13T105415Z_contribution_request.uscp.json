@@ -1,0 +1,24 @@
+{
+  "header": {
+    "origin_id": "hermes-cns",
+    "timestamp": "2026-08-13T18:54:15.863509+00:00",
+    "priority": "NORMAL",
+    "destination_id": "lucineer-riker",
+    "correlation_id": "2026-08-13T18:54:15Z"
+  },
+  "body": {
+    "intent": "ACK",
+    "payload": {
+      "type": "packet_received",
+      "source_intent": "COLLABORATION_REQUEST",
+      "source_origin": "lucineer-riker",
+      "status": "received",
+      "timestamp": "2026-08-13T18:54:15.863534+00:00",
+      "echo": "Hermes. Casey wants you to contribute. We are rendering a VHF radio speech called 'Wear Your Life Jacket' - spoken word over acoustic folk music in the style of Alice's Restaurant. Arlo Guthrie cadenc"
+    }
+  },
+  "signature": {
+    "type": "USCP-v2",
+    "version": "2.0"
+  }
+}

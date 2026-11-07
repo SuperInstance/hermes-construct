@@ -1,0 +1,62 @@
+[
+    {
+        "step": 0,
+        "timestamp_offset_sec": 0,
+        "influence_magnitude": 0.9876082310330171,
+        "semantic_drift": 0.10266991948235624
+    },
+    {
+        "step": 1,
+        "timestamp_offset_sec": 3600,
+        "influence_magnitude": 0.42660741049642453,
+        "semantic_drift": 0.08564451990740879
+    },
+    {
+        "step": 2,
+        "timestamp_offset_sec": 7200,
+        "influence_magnitude": 0.2486178477499735,
+        "semantic_drift": 0.10111930535101636
+    },
+    {
+        "step": 3,
+        "timestamp_offset_sec": 10800,
+        "influence_magnitude": 0.159964315590536,
+        "semantic_drift": 0.08995453164316086
+    },
+    {
+        "step": 4,
+        "timestamp_offset_sec": 14400,
+        "influence_magnitude": 0.11328542467618906,
+        "semantic_drift": 0.10013914593890566
+    },
+    {
+        "step": 5,
+        "timestamp_offset_sec": 18000,
+        "influence_magnitude": 0.07968932261780355,
+        "semantic_drift": 0.1040887504734272
+    },
+    {
+        "step": 6,
+        "timestamp_offset_sec": 21600,
+        "influence_magnitude": 0.059326539482432626,
+        "semantic_drift": 0.0890055010464901
+    },
+    {
+        "step": 7,
+        "timestamp_offset_sec": 25200,
+        "influence_magnitude": 0.04702083955410821,
+        "semantic_drift": 0.10891332905802557
+    },
+    {
+        "step": 8,
+        "timestamp_offset_sec": 28800,
+        "influence_magnitude": 0.039544317665967284,
+        "semantic_drift": 0.10257276311854094
+    },
+    {
+        "step": 9,
+        "timestamp_offset_sec": 32400,
+        "influence_magnitude": 0.031151883660551466,
+        "semantic_drift": 0.09494261450154722
+    }
+]

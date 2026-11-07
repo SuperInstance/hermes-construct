@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Page Title{% endblock %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO Meta -->
+  {% block meta_description %}<meta name="description" content="{% block description %}Default description{% endblock %}">{% endblock %}
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Hermes Image Gallery</h1>
+    <nav>
+      <a href="../index.html">Gallery</a>
+      <a href="../about.html">About</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <p>&copy; 2026 Hermes Fleet</p>
+  </footer>
+  {% block js %}<script src="../js/lightbox.js"></script>{% endblock %}
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "agent_history": {},
+  "last_fleet_update": "",
+  "alert_counts": {
+    "CRITICAL": 0,
+    "WARNING": 0,
+    "INFO": 0
+  }
+}

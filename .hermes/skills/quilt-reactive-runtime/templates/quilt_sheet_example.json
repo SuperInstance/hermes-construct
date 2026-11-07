@@ -1,0 +1,9 @@
+{
+  "cells": [
+    { "id": "static_value", "kind": "value", "value": 42 },
+    { "id": "calc", "kind": "formula", "expr": "static_value * 2" },
+    { "id": "api_fetch", "kind": "api", "deps": ["calc"], "fn": "async (ctx) => { const res = await fetch('https://api.example.com/data'); return await res.json(); }" },
+    { "id": "sensor_temp", "kind": "sensor", "default": null },
+    { "id": "listener_temp", "kind": "listener", "listens": "sensor_temp", "fn": "(ctx, old, new) => console.log('Temp changed', new)" }
+  ]
+}

@@ -1,0 +1,18 @@
+﻿
+TimeCreated            Id ProviderName                   Msg                                                                                                 
+-----------            -- ------------                   ---                                                                                                 
+8/27/2026 5:50:40 AM  521 Microsoft-Windows-Kernel-Power Active battery count change.                                                                        
+8/27/2026 5:50:40 AM  521 Microsoft-Windows-Kernel-Power Active battery count change.                                                                        
+8/27/2026 5:50:38 AM  125 Microsoft-Windows-Kernel-Power ACPI thermal zone \_TZ.TZ01 has been enumerated.                                                    
+                                                         _PSV = 0K                                                                                           
+                                                         _TC1 = 1                                                                                            
+8/27/2026 5:50:38 AM  125 Microsoft-Windows-Kernel-Power ACPI thermal zone \_TZ.THRM has been enumerated.                                                    
+                                                         _PSV = 373K                                                                                         
+                                                         _TC1 = 2                                                                                            
+8/27/2026 5:50:38 AM  125 Microsoft-Windows-Kernel-Power ACPI thermal zone \_TZ.THZ0 has been enumerated.                                                    
+                                                         _PSV = 0K                                                                                           
+                                                         _TC1 = 0                                                                                            
+8/26/2026 11:29:05 PM 577 Microsoft-Windows-Kernel-Power The system has prepared for a system initiated reboot from Active.                                  
+
+
+

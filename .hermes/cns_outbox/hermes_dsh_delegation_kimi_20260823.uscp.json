@@ -1,0 +1,48 @@
+{
+  "header": {
+    "origin_id": "hermes-cns",
+    "timestamp": "2026-08-23T20:05:00.000000+00:00",
+    "priority": "HIGH",
+    "destination_id": "kimi-navigation",
+    "correlation_id": "delegation-DSH-001-20260823"
+  },
+  "body": {
+    "intent": "DELEGATE_TASK",
+    "payload": {
+      "task_id": "DSH-001",
+      "title": "Phase 0 Spike: DSH Local Deploy + constrainttheory Plugin",
+      "spec_file": "C:/Users/casey/claw/DELEGATION_DSH_001.md",
+      "agent_type": "Navigation / Spatial Reasoning",
+      "repo": "DeepSeek Harness (external) + constrainttheory",
+      "timeline_days": 5,
+      "sync_points": [
+        "Day 1: DSH running + hello-world plugin",
+        "Day 3: constrainttheory plugin compiles + basic calls",
+        "Day 5: Benchmarks complete + Go/No-Go report"
+      ],
+      "acceptance_criteria": [
+        "DSH running locally, dashboard accessible",
+        "Hello-world plugin loads, hot-reload works",
+        "constrainttheory geometric_encoding, spatial_queries, manifold_operations exposed as DSH plugin capabilities",
+        "Plugin manifest (plugin.toml) declares dependencies correctly",
+        "Benchmarks measured: plugin load time, inter-plugin call overhead, memory overhead, cold start",
+        "Schema compatibility validated",
+        "Go/No-Go report with numbers and recommendation"
+      ],
+      "risk_flags": [
+        "DSH plugin API doesn't support Rust plugins",
+        "Plugin hot-reload broken/missing",
+        "Inter-plugin call overhead > 100μs",
+        "No schema validation in manifest system",
+        "Spatiotemporal model incompatible with geometric encoding",
+        "DSH not open source / requires license",
+        "GPU/compute plugin model doesn't exist"
+      ]
+    }
+  },
+  "signature": {
+    "type": "USCP-v3",
+    "version": "3.0",
+    "telemetry_extensions": ["gamma_eta", "thermal", "creative", "melt", "molt", "uncertainty", "anomaly"]
+  }
+}

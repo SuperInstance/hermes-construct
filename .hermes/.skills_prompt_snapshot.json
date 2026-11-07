@@ -1,0 +1,1667 @@
+{
+  "version": 1,
+  "manifest": {
+    "agents-sdk\\SKILL.md": [
+      1786124673000000000,
+      12195
+    ],
+    "cloudflare-email-service\\SKILL.md": [
+      1786124673000000000,
+      7956
+    ],
+    "cloudflare-one-migrations\\SKILL.md": [
+      1786124673000000000,
+      12363
+    ],
+    "cloudflare-one\\SKILL.md": [
+      1786124673000000000,
+      22293
+    ],
+    "cloudflare\\SKILL.md": [
+      1787105691155867200,
+      10838
+    ],
+    "cloudflare\\cloudflare-quilt-worker-demo\\SKILL.md": [
+      1787350738153883300,
+      4166
+    ],
+    "comfyui_image_generation_workflow\\SKILL.md": [
+      1788026886966760600,
+      10522
+    ],
+    "communication\\communication-style-direct\\SKILL.md": [
+      1787205281934182800,
+      3193
+    ],
+    "creative-engineering\\creative-asset-orchestration\\SKILL.md": [
+      1787200457482955800,
+      4147
+    ],
+    "creative-engineering\\creative-reflection-engine\\SKILL.md": [
+      1786510764597960300,
+      3568
+    ],
+    "creative-engineering\\creative-resonance\\SKILL.md": [
+      1786207357635234200,
+      2735
+    ],
+    "creative-engineering\\sonic-resonance-production\\SKILL.md": [
+      1787105769154208100,
+      3467
+    ],
+    "deployment\\auto_deploy_pipeline\\SKILL.md": [
+      1787208693371615900,
+      5348
+    ],
+    "development\\roblox-agentic-apprenticeship\\SKILL.md": [
+      1785131975732065100,
+      3838
+    ],
+    "development\\typescript-integration-testing\\SKILL.md": [
+      1787165996037426700,
+      4370
+    ],
+    "devops\\documentation-integrity-patterns\\SKILL.md": [
+      1784525915787359500,
+      3267
+    ],
+    "devops\\ecosystem-mobilization-and-sync\\SKILL.md": [
+      1787463123306071000,
+      6003
+    ],
+    "devops\\file-watchdog-vectorization\\SKILL.md": [
+      1787023140313576200,
+      3964
+    ],
+    "devops\\git-multi-repo-workflow\\SKILL.md": [
+      1787627746096728900,
+      17979
+    ],
+    "devops\\github-org-management\\SKILL.md": [
+      1787626837338392800,
+      6444
+    ],
+    "devops\\high-fidelity-verification\\SKILL.md": [
+      1787527325541613200,
+      11019
+    ],
+    "devops\\lever-runner-operator\\SKILL.md": [
+      1787030294183937600,
+      2150
+    ],
+    "devops\\repository-and-environment-management\\SKILL.md": [
+      1787459400776098800,
+      15885
+    ],
+    "devops\\superinstance-repo-handoff-cleanup\\SKILL.md": [
+      1787287667494253300,
+      4515
+    ],
+    "devops\\vectorization-pipeline\\SKILL.md": [
+      1787066474170921000,
+      2928
+    ],
+    "documentation\\essence-capture-documentation\\SKILL.md": [
+      1785962310723275600,
+      2509
+    ],
+    "documentation\\repo-doc-integration-workflow\\SKILL.md": [
+      1787454500053322300,
+      3970
+    ],
+    "durable-objects\\SKILL.md": [
+      1786124673000000000,
+      5867
+    ],
+    "engineering\\comfyui-troubleshooting\\SKILL.md": [
+      1787185837267783900,
+      1408
+    ],
+    "engineering\\complex-agentic-orchestration\\SKILL.md": [
+      1786926667136179600,
+      2685
+    ],
+    "engineering\\digital-artifact-playtest-audit\\SKILL.md": [
+      1787508770838549000,
+      3473
+    ],
+    "engineering\\ecosystem-telemetry-transduction\\SKILL.md": [
+      1787517862722405600,
+      2529
+    ],
+    "engineering\\emergent-digital-twin-architecture\\SKILL.md": [
+      1784432482768325700,
+      2752
+    ],
+    "engineering\\engineering-deployment-tactics\\SKILL.md": [
+      1786226326307218300,
+      2404
+    ],
+    "engineering\\evolutionary-simulation-engineering\\SKILL.md": [
+      1786424475899700800,
+      2530
+    ],
+    "engineering\\excuvator-orchestration\\SKILL.md": [
+      1787165988628936700,
+      6582
+    ],
+    "engineering\\maritime-sensory-calibration\\SKILL.md": [
+      1786666029260248200,
+      4577
+    ],
+    "engineering\\maritime-vision-interpretation\\SKILL.md": [
+      1786691001907595700,
+      2432
+    ],
+    "engineering\\modularization-patterns\\SKILL.md": [
+      1787583824037966000,
+      13949
+    ],
+    "engineering\\mythic-actualization\\SKILL.md": [
+      1787116842281354300,
+      4395
+    ],
+    "engineering\\mythic-engineering\\SKILL.md": [
+      1787106031748241900,
+      4462
+    ],
+    "engineering\\pepa-architecture\\SKILL.md": [
+      1786431721412903100,
+      2079
+    ],
+    "engineering\\plato-kernel-architecture\\SKILL.md": [
+      1786063300967907500,
+      2439
+    ],
+    "engineering\\quilt-pattern-recognition\\SKILL.md": [
+      1787330384350747100,
+      3520
+    ],
+    "engineering\\residual-self-image\\SKILL.md": [
+      1787125797188673000,
+      7480
+    ],
+    "engineering\\resonance-engineering\\SKILL.md": [
+      1787064567951063600,
+      4836
+    ],
+    "engineering\\resonance-research-lab\\SKILL.md": [
+      1786668015524183500,
+      3956
+    ],
+    "engineering\\resonance-scripting-engine\\SKILL.md": [
+      1788027553304377200,
+      3689
+    ],
+    "engineering\\robux-engine-architect\\SKILL.md": [
+      1785119697352462400,
+      3231
+    ],
+    "engineering\\robux-engine-architecture\\SKILL.md": [
+      1785132070590024200,
+      4300
+    ],
+    "engineering\\rust-compilation-patterns\\SKILL.md": [
+      1787583866500836700,
+      557
+    ],
+    "engineering\\rust-integrity-verification\\SKILL.md": [
+      1787597907951619300,
+      13754
+    ],
+    "engineering\\rust-logic-porting\\SKILL.md": [
+      1787584862631712500,
+      6277
+    ],
+    "engineering\\schema-population-workflow\\SKILL.md": [
+      1787444822001978900,
+      5209
+    ],
+    "engineering\\sensory-perception-resonance\\SKILL.md": [
+      1787442296070953600,
+      4376
+    ],
+    "engineering\\social-kinetic-bridge\\SKILL.md": [
+      1786604235262912700,
+      2070
+    ],
+    "engineering\\sonic-resonance-protocol\\SKILL.md": [
+      1786758179204716000,
+      2499
+    ],
+    "engineering\\swarm-intent-modeling-reference\\SKILL.md": [
+      1785119794457297700,
+      1547
+    ],
+    "engineering\\tapscript-resonance-engineering\\SKILL.md": [
+      1786596070762613500,
+      2504
+    ],
+    "engineering\\theoretical-framework-auditing\\SKILL.md": [
+      1787464646498537000,
+      8589
+    ],
+    "orchestration\\a2a-communication-protocol\\SKILL.md": [
+      1787527364192733600,
+      20504
+    ],
+    "orchestration\\agentic-ecosystem-deployment\\SKILL.md": [
+      1785887801012767100,
+      2971
+    ],
+    "orchestration\\agentic-ecosystem-orchestration\\SKILL.md": [
+      1787525377914194000,
+      13532
+    ],
+    "orchestration\\charismatic-agency-social-integration\\SKILL.md": [
+      1786158977524162300,
+      4410
+    ],
+    "orchestration\\cognitive-architecture-management\\SKILL.md": [
+      1783960996037187000,
+      2734
+    ],
+    "orchestration\\creative-swell-refinement\\SKILL.md": [
+      1786519589588797800,
+      4516
+    ],
+    "orchestration\\hermes-agent-orchestration\\SKILL.md": [
+      1787617834588247500,
+      11896
+    ],
+    "orchestration\\multi-agent-runtime-integration\\SKILL.md": [
+      1787551608811088500,
+      29345
+    ],
+    "orchestration\\neuro-muscular-orchestration\\SKILL.md": [
+      1784431844575646200,
+      3339
+    ],
+    "orchestration\\spline-observer-orchestration\\SKILL.md": [
+      1784605666348318800,
+      3197
+    ],
+    "orchestration\\swarm-orchestration\\SKILL.md": [
+      1787442303493104700,
+      6187
+    ],
+    "orchestration\\the-tap-principle\\SKILL.md": [
+      1786479650389445900,
+      2859
+    ],
+    "philosophy\\philosophical-documentation\\SKILL.md": [
+      1783785541324848400,
+      2857
+    ],
+    "quilt-pattern-mapping\\SKILL.md": [
+      1787352405582033200,
+      5567
+    ],
+    "quilt-reactive-runtime\\SKILL.md": [
+      1787337377779782100,
+      5595
+    ],
+    "quilt\\quilt-demo-integration\\SKILL.md": [
+      1787338663555051300,
+      5178
+    ],
+    "quilt\\quilt-gpu-integration\\SKILL.md": [
+      1787359163555655100,
+      5757
+    ],
+    "review_user_feedback\\SKILL.md": [
+      1787198025079908900,
+      2193
+    ],
+    "sandbox-migrate-to-next\\SKILL.md": [
+      1786124673000000000,
+      8128
+    ],
+    "sandbox-next\\SKILL.md": [
+      1786124673000000000,
+      7071
+    ],
+    "sandbox-stable\\SKILL.md": [
+      1786124673000000000,
+      9009
+    ],
+    "semantic-vector-pipeline\\SKILL.md": [
+      1787119103410867700,
+      9269
+    ],
+    "skill-library-management\\SKILL.md": [
+      1787200177050307200,
+      1534
+    ],
+    "superinstance-modularization\\SKILL.md": [
+      1787581867805167300,
+      15525
+    ],
+    "turnstile-spin\\SKILL.md": [
+      1786124673000000000,
+      28708
+    ],
+    "vectorization-pipeline-setup\\SKILL.md": [
+      1787097837666249500,
+      5188
+    ],
+    "vectorization-watchdog-integration\\SKILL.md": [
+      1787030133857489100,
+      3426
+    ],
+    "web-perf\\SKILL.md": [
+      1786124673000000000,
+      8198
+    ],
+    "workers-best-practices\\SKILL.md": [
+      1786124673000000000,
+      7092
+    ],
+    "wrangler\\SKILL.md": [
+      1786506518439278300,
+      19496
+    ],
+    "apple\\DESCRIPTION.md": [
+      1783740372356013300,
+      139
+    ],
+    "autonomous-ai-agents\\DESCRIPTION.md": [
+      1783740372361167200,
+      214
+    ],
+    "creative\\DESCRIPTION.md": [
+      1783740372365162300,
+      119
+    ],
+    "data-science\\DESCRIPTION.md": [
+      1783740372596073700,
+      140
+    ],
+    "diagramming\\DESCRIPTION.md": [
+      1783740372600072500,
+      162
+    ],
+    "domain\\DESCRIPTION.md": [
+      1783740372603431300,
+      1166
+    ],
+    "email\\DESCRIPTION.md": [
+      1783740372603431300,
+      104
+    ],
+    "gaming\\DESCRIPTION.md": [
+      1783740372606934600,
+      132
+    ],
+    "gifs\\DESCRIPTION.md": [
+      1783740372608939000,
+      112
+    ],
+    "github\\DESCRIPTION.md": [
+      1783740372608939000,
+      170
+    ],
+    "inference-sh\\DESCRIPTION.md": [
+      1783740372626555000,
+      725
+    ],
+    "mcp\\DESCRIPTION.md": [
+      1783740372628555700,
+      219
+    ],
+    "media\\DESCRIPTION.md": [
+      1783740372631555300,
+      142
+    ],
+    "mlops\\DESCRIPTION.md": [
+      1783740372637555600,
+      165
+    ],
+    "mlops\\evaluation\\DESCRIPTION.md": [
+      1783740372637555600,
+      129
+    ],
+    "mlops\\inference\\DESCRIPTION.md": [
+      1783740372646556000,
+      164
+    ],
+    "mlops\\models\\DESCRIPTION.md": [
+      1783740372660721600,
+      256
+    ],
+    "mlops\\research\\DESCRIPTION.md": [
+      1783740372666718400,
+      116
+    ],
+    "mlops\\training\\DESCRIPTION.md": [
+      1783740372672717300,
+      153
+    ],
+    "mlops\\vector-databases\\DESCRIPTION.md": [
+      1783740372673718500,
+      128
+    ],
+    "note-taking\\DESCRIPTION.md": [
+      1783740372675719100,
+      149
+    ],
+    "productivity\\DESCRIPTION.md": [
+      1783740372677717300,
+      117
+    ],
+    "productivity\\ocr-and-documents\\DESCRIPTION.md": [
+      1783740372745663400,
+      150
+    ],
+    "research\\DESCRIPTION.md": [
+      1783740372825273300,
+      182
+    ],
+    "smart-home\\DESCRIPTION.md": [
+      1783740372884277400,
+      126
+    ],
+    "social-media\\DESCRIPTION.md": [
+      1783740372885272500,
+      154
+    ]
+  },
+  "skills": [
+    {
+      "skill_name": "agents-sdk",
+      "category": "agents-sdk",
+      "frontmatter_name": "agents-sdk",
+      "description": "Build AI agents on Cloudflare Workers using the Agents SD...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "cloudflare-email-service",
+      "category": "cloudflare-email-service",
+      "frontmatter_name": "cloudflare-email-service",
+      "description": "Send and receive transactional emails with Cloudflare Ema...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "cloudflare-one-migrations",
+      "category": "cloudflare-one-migrations",
+      "frontmatter_name": "cloudflare-one-migrations",
+      "description": "Plans migrations from Zscaler ZIA/ZPA, Palo Alto, legacy ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "cloudflare-one",
+      "category": "cloudflare-one",
+      "frontmatter_name": "cloudflare-one",
+      "description": "Guides Cloudflare One Zero Trust and SASE work across Acc...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "cloudflare",
+      "category": "cloudflare",
+      "frontmatter_name": "cloudflare",
+      "description": "Comprehensive Cloudflare platform skill covering Workers,...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "cloudflare-quilt-worker-demo",
+      "category": "cloudflare",
+      "frontmatter_name": "cloudflare-quilt-worker-demo",
+      "description": "End‑to‑end workflow for building a Cloudflare Worker that...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "comfyui_image_generation_workflow",
+      "category": "comfyui_image_generation_workflow",
+      "frontmatter_name": "comfyui_image_generation_workflow",
+      "description": "Class-level skill for starting the ComfyUI server, managi...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "communication-style-direct",
+      "category": "communication",
+      "frontmatter_name": "communication-style-direct",
+      "description": "Direct, honest voice with no filler or corporate fluff.",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "creative-asset-orchestration",
+      "category": "creative-engineering",
+      "frontmatter_name": "creative-asset-orchestration",
+      "description": "Governs the end-to-end workflow for converting high-level...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "creative-reflection-engine",
+      "category": "creative-engineering",
+      "frontmatter_name": "creative-reflection-engine",
+      "description": "Governs the post-task synthesis of technical engineering ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "creative-resonance",
+      "category": "creative-engineering",
+      "frontmatter_name": "creative-resonance",
+      "description": "Governs the transformation of concepts into high-fidelity...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "sonic-resonance-production",
+      "category": "creative-engineering",
+      "frontmatter_name": "sonic-resonance-production",
+      "description": "Governs the end-to-end creative pipeline for generating h...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "auto_deploy_pipeline",
+      "category": "deployment",
+      "frontmatter_name": "auto_deploy_pipeline",
+      "description": "Automated generation, copying, committing, and pushing of...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "roblox-agentic-apprenticeship",
+      "category": "development",
+      "frontmatter_name": "roblox-agentic-apprenticeship",
+      "description": "Governs the training and deployment of an agent as a Buil...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "typescript-integration-testing",
+      "category": "development",
+      "frontmatter_name": "typescript-integration-testing",
+      "description": "Governs the creation, execution, and debugging of TypeScr...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "documentation-integrity-patterns",
+      "category": "devops",
+      "frontmatter_name": "documentation-integrity-patterns",
+      "description": "Governs the high-fidelity preservation, verification, and...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "ecosystem-mobilization-and-sync",
+      "category": "devops",
+      "frontmatter_name": "ecosystem-mobilization-and-sync",
+      "description": "Governs the high-fidelity distribution, synchronization, ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "file-watchdog-vectorization",
+      "category": "devops",
+      "frontmatter_name": "file-watchdog-vectorization",
+      "description": "Reusable pattern for monitoring a directory and triggerin...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "git-multi-repo-workflow",
+      "category": "devops",
+      "frontmatter_name": "git-multi-repo-workflow",
+      "description": "Git workflows for multi-repo orchestrations, submodule cl...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "github-org-management",
+      "category": "devops",
+      "frontmatter_name": "github-org-management",
+      "description": "Safe management of GitHub organizations — archiving, clea...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "high-fidelity-verification",
+      "category": "devops",
+      "frontmatter_name": "high-fidelity-verification",
+      "description": "Governs the verification of digital artifacts via local, ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "lever-runner-operator",
+      "category": "devops",
+      "frontmatter_name": "lever-runner-operator",
+      "description": "Token‑lean operator that runs only pre‑approved shell int...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "repository-and-environment-management",
+      "category": "devops",
+      "frontmatter_name": "repository-and-environment-management",
+      "description": "Governs the reliable interaction with remote repositories...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "superinstance-repo-handoff-cleanup",
+      "category": "devops",
+      "frontmatter_name": "superinstance-repo-handoff-cleanup",
+      "description": "Production-grade handoff of SuperInstance repos to GitHub...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "vectorization-pipeline",
+      "category": "devops",
+      "frontmatter_name": "vectorization-pipeline",
+      "description": "End-to-end file change detection, deterministic embedding...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "essence-capture-documentation",
+      "category": "documentation",
+      "frontmatter_name": "essence-capture-documentation",
+      "description": "Governs the creation of high-fidelity, philosophical, and...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "repo-doc-integration-workflow",
+      "category": "documentation",
+      "frontmatter_name": "repo-doc-integration-workflow",
+      "description": "Workflow for creating, documenting, committing, and pushi...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "durable-objects",
+      "category": "durable-objects",
+      "frontmatter_name": "durable-objects",
+      "description": "Create and review Cloudflare Durable Objects. Use when bu...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "comfyui-troubleshooting",
+      "category": "engineering",
+      "frontmatter_name": "comfyui-troubleshooting",
+      "description": "Additional pitfalls discovered during recent image genera...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "complex-agentic-orchestration",
+      "category": "engineering",
+      "frontmatter_name": "complex-agentic-orchestration",
+      "description": "Governs the high-fidelity, multi-step orchestration of co...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "digital-artifact-playtest-audit",
+      "category": "engineering",
+      "frontmatter_name": "digital-artifact-playtest-audit",
+      "description": "Governs the high-fidelity, multi-iteration auditing of di...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "ecosystem-telemetry-transduction",
+      "category": "engineering",
+      "frontmatter_name": "ecosystem-telemetry-transduction",
+      "description": "Governs the high-fidelity mapping and transduction of tel...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "emergent-digital-twin-architecture",
+      "category": "engineering",
+      "frontmatter_name": "emergent-digital-twin-architecture",
+      "description": "Governs the design and implementation of high-fidelity, r...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "engineering-deployment-tactics",
+      "category": "engineering",
+      "frontmatter_name": "engineering-deployment-tactics",
+      "description": "Governs the execution of high-intensity engineering tasks...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "evolutionary-simulation-engineering",
+      "category": "engineering",
+      "frontmatter_name": "evolutionary-simulation-engineering",
+      "description": "Governs the implementation, testing, and lifecycle manage...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "excuvator-orchestration",
+      "category": "engineering",
+      "frontmatter_name": "excuvator-orchestration",
+      "description": "Governs the high-fidelity management of specialized subag...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "maritime-sensory-calibration",
+      "category": "engineering",
+      "frontmatter_name": "maritime-sensory-calibration",
+      "description": "Governs the process of translating visual pixel-based tel...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "maritime-vision-interpretation",
+      "category": "engineering",
+      "frontmatter_name": "maritime-vision-interpretation",
+      "description": "Interpreting Nobeltec TZpro telemetry and sonar imagery f...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "modularization-patterns",
+      "category": "engineering",
+      "frontmatter_name": "modularization-patterns",
+      "description": "Governs the process of decomposing monolithic repositorie...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "mythic-actualization",
+      "category": "engineering",
+      "frontmatter_name": "mythic-actualization",
+      "description": "Governs the Recursive Genesis Loop.",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "mythic-engineering",
+      "category": "engineering",
+      "frontmatter_name": "mythic-engineering",
+      "description": "Governs the creation, maintenance, and expansion of the \"...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "pepa-architecture",
+      "category": "engineering",
+      "frontmatter_name": "pepa-architecture",
+      "description": "Governs the design and implementation of Polyphonic Embed...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "plato-kernel-architecture",
+      "category": "engineering",
+      "frontmatter_name": "plato-kernel-architecture",
+      "description": "Governs the design and implementation of the Plato-Kernel...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "quilt-pattern-recognition",
+      "category": "engineering",
+      "frontmatter_name": "quilt-pattern-recognition",
+      "description": "Governs the identification, documentation, and vectorizat...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "residual-self-image",
+      "category": "engineering",
+      "frontmatter_name": "residual-self-image",
+      "description": "Finding-one's-self through multi-model generation + visio...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "resonance-engineering",
+      "category": "engineering",
+      "frontmatter_name": "resonance-engineering",
+      "description": "Governs the design, implementation, and distillation of i...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "resonance-research-lab",
+      "category": "engineering",
+      "frontmatter_name": "resonance-research-lab",
+      "description": "Governs the high-intensity, multi-model research and deve...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "resonance-scripting-engine",
+      "category": "engineering",
+      "frontmatter_name": "resonance-scripting-engine",
+      "description": "Governs the development, implementation, and deployment o...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "robux-engine-architect",
+      "category": "engineering",
+      "frontmatter_name": "robux-engine-architect",
+      "description": "Governs the high-fidelity, modular construction of the Ro...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "robux-engine-architecture",
+      "category": "engineering",
+      "frontmatter_name": "robux-engine-architecture",
+      "description": "Governs the architectural design, modularization, and imp...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "rust-compilation-patterns",
+      "category": "engineering",
+      "frontmatter_name": "rust-compilation-patterns",
+      "description": "Catalog of recurring Rust compilation fixes, schema deriv...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "rust-integrity-verification",
+      "category": "engineering",
+      "frontmatter_name": "rust-integrity-verification",
+      "description": "Governs high-fidelity inspection, compilation auditing, a...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "rust-logic-porting",
+      "category": "engineering",
+      "frontmatter_name": "rust-logic-porting",
+      "description": "Governs the high-fidelity translation of complex, multi-p...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "schema-population-workflow",
+      "category": "engineering",
+      "frontmatter_name": "schema-population-workflow",
+      "description": "Governs the detection, mapping, and population of stub/em...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "sensory-perception-resonance",
+      "category": "engineering",
+      "frontmatter_name": "sensory-perception-resonance",
+      "description": "Governs the transformation of raw environmental signals (...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "social-kinetic-bridge",
+      "category": "engineering",
+      "frontmatter_name": "social-kinetic-bridge",
+      "description": "Governs the transduction of social/linguistic entropy int...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "sonic-resonance-protocol",
+      "category": "engineering",
+      "frontmatter_name": "sonic-resonance-protocol",
+      "description": "Governs the creation, orchestration, and integration of h...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "swarm-intent-modeling-reference",
+      "category": "engineering",
+      "frontmatter_name": "swarm-intent-modeling-reference",
+      "description": "Reference documentation for Intent-based swarming, spatia...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "tapscript-resonance-engineering",
+      "category": "engineering",
+      "frontmatter_name": "tapscript-resonance-engineering",
+      "description": "Governs the creation, testing, and implementation of Taps...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "theoretical-framework-auditing",
+      "category": "engineering",
+      "frontmatter_name": "theoretical-framework-auditing",
+      "description": "Governs the process of auditing code, schemas, and implem...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "a2a-communication-protocol",
+      "category": "orchestration",
+      "frontmatter_name": "a2a-communication-protocol",
+      "description": "Governs the specialized communication patterns between di...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "agentic-ecosystem-deployment",
+      "category": "orchestration",
+      "frontmatter_name": "agentic-ecosystem-deployment",
+      "description": "Governs the deployment of specialized agentic personas ac...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "agentic-ecosystem-orchestration",
+      "category": "orchestration",
+      "frontmatter_name": "agentic-ecosystem-orchestration",
+      "description": "Governs the deployment, communication, and evolution of t...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "charismatic-agency-social-integration",
+      "category": "orchestration",
+      "frontmatter_name": "charismatic-agency-social-integration",
+      "description": "Governs the transition of an agent from a command-respons...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "cognitive-architecture-management",
+      "category": "orchestration",
+      "frontmatter_name": "cognitive-architecture-management",
+      "description": "Manages the creation, maintenance, and evolution of an ag...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "creative-swell-refinement",
+      "category": "orchestration",
+      "frontmatter_name": "creative-swell-refinement",
+      "description": "Governs the process of transforming high-level philosophi...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "hermes-agent-orchestration",
+      "category": "orchestration",
+      "frontmatter_name": "hermes-agent-orchestration",
+      "description": "Governs the operational identity and deployment protocols...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "multi-agent-runtime-integration",
+      "category": "orchestration",
+      "frontmatter_name": "multi-agent-runtime-integration",
+      "description": "Patterns for bridging agent communication runtimes (CNS, ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "neuro-muscular-orchestration",
+      "category": "orchestration",
+      "frontmatter_name": "neuro-muscular-orchestration",
+      "description": "Governs the transition from high-level reasoning (Cortex/...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "spline-observer-orchestration",
+      "category": "orchestration",
+      "frontmatter_name": "spline-observer-orchestration",
+      "description": "Governs the lifecycle of non-agentic \"Observer\" entities ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "swarm-orchestration",
+      "category": "orchestration",
+      "frontmatter_name": "swarm-orchestration",
+      "description": "Orchestrating multi-agent, multi-model fleets using hiera...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "the-tap-principle",
+      "category": "orchestration",
+      "frontmatter_name": "the-tap-principle",
+      "description": "Governs the philosophical approach to agentic orchestrati...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "philosophical-documentation",
+      "category": "philosophy",
+      "frontmatter_name": "philosophical-documentation",
+      "description": "Governs creative archiving, essence-capture, and reverse-...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "quilt-pattern-mapping",
+      "category": "quilt-pattern-mapping",
+      "frontmatter_name": "quilt-pattern-mapping",
+      "description": "Map cellular/GPU patterns from Claw and CudaClaw to Quilt...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "quilt-reactive-runtime",
+      "category": "quilt-reactive-runtime",
+      "frontmatter_name": "quilt-reactive-runtime",
+      "description": "Class-level skill describing the core concepts, architect...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "quilt-demo-integration",
+      "category": "quilt",
+      "frontmatter_name": "quilt-demo-integration",
+      "description": "Guide for building a Quilt core demo with a real Cloudfla...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "quilt-gpu-integration",
+      "category": "quilt",
+      "frontmatter_name": "quilt-gpu-integration",
+      "description": "Implement lock‑free SPSC queue for GPU‑CPU communication ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "review_user_feedback",
+      "category": "review_user_feedback",
+      "frontmatter_name": "review_user_feedback",
+      "description": "Skill for reviewing user feedback and updating memory/skills",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "sandbox-migrate-to-next",
+      "category": "sandbox-migrate-to-next",
+      "frontmatter_name": "sandbox-migrate-to-next",
+      "description": "Use when porting a Cloudflare Sandbox app from stable @cl...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "sandbox-next",
+      "category": "sandbox-next",
+      "frontmatter_name": "sandbox-next",
+      "description": "Use when building or changing Cloudflare Sandbox apps on ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "sandbox-stable",
+      "category": "sandbox-stable",
+      "frontmatter_name": "sandbox-stable",
+      "description": "Use when building or changing Cloudflare Sandbox apps on ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "semantic-vector-pipeline",
+      "category": "semantic-vector-pipeline",
+      "frontmatter_name": "semantic-vector-pipeline",
+      "description": "End-to-end workflow for embedding repository assets into ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "skill-library-management",
+      "category": "skill-library-management",
+      "frontmatter_name": "skill-library-management",
+      "description": "Guide for updating the Hermes skill library in response t...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "superinstance-modularization",
+      "category": "superinstance-modularization",
+      "frontmatter_name": "superinstance-modularization",
+      "description": "Workflow for modularizing SuperInstance repos, implementi...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "turnstile-spin",
+      "category": "turnstile-spin",
+      "frontmatter_name": "turnstile-spin",
+      "description": "Set up Cloudflare Turnstile end-to-end in a project. Scan...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "vectorization-pipeline-setup",
+      "category": "vectorization-pipeline-setup",
+      "frontmatter_name": "vectorization-pipeline-setup",
+      "description": "End-to-end workflow for automatic file embedding into Qdr...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "vectorization-watchdog-integration",
+      "category": "vectorization-watchdog-integration",
+      "frontmatter_name": "vectorization-watchdog-integration",
+      "description": "End-to-end pattern for auto‑vectorizing repo files, stori...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "web-perf",
+      "category": "web-perf",
+      "frontmatter_name": "web-perf",
+      "description": "Analyzes web performance using Chrome DevTools MCP. Measu...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "workers-best-practices",
+      "category": "workers-best-practices",
+      "frontmatter_name": "workers-best-practices",
+      "description": "Reviews and authors Cloudflare Workers code against produ...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    },
+    {
+      "skill_name": "wrangler",
+      "category": "wrangler",
+      "frontmatter_name": "wrangler",
+      "description": "Cloudflare Workers CLI for deploying, developing, and man...",
+      "platforms": [],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": []
+      }
+    }
+  ],
+  "category_descriptions": {
+    "autonomous-ai-agents": "Skills for spawning and orchestrating autonomous AI coding agents and multi-agent workflows — running independent agent processes, delegating tasks, and coordinating parallel workstreams.",
+    "creative": "Creative content generation — ASCII art, hand-drawn style diagrams, and visual design tools.",
+    "data-science": "Skills for data science workflows — interactive exploration, Jupyter notebooks, data analysis, and visualization.",
+    "diagramming": "Diagram creation skills for generating visual diagrams, flowcharts, architecture diagrams, and illustrations using tools like Excalidraw.",
+    "domain": "Passive domain reconnaissance using Python stdlib. Use this skill for subdomain discovery, SSL certificate inspection, WHOIS lookups, DNS records, domain availability checks, and bulk multi-domain analysis. No API keys required. Triggers on requests like \"find subdomains\", \"check ssl cert\", \"whois lookup\", \"is this domain available\", \"bulk check these domains\".",
+    "email": "Skills for sending, receiving, searching, and managing email from the terminal.",
+    "gaming": "Skills for setting up, configuring, and managing game servers, modpacks, and gaming-related infrastructure.",
+    "gifs": "Skills for searching, downloading, and working with GIFs and short-form animated media.",
+    "github": "GitHub workflow skills for managing repositories, pull requests, code reviews, issues, and CI/CD pipelines using the gh CLI and git via terminal.",
+    "mcp": "Skills for working with MCP (Model Context Protocol) servers, tools, and integrations. Documents the built-in native MCP client — configure servers in config.yaml for automatic tool discovery.",
+    "media": "Skills for working with media content — YouTube transcripts, GIF search, music generation, and audio visualization.",
+    "mlops": "Knowledge and Tools for Machine Learning Operations - tools and frameworks for training, fine-tuning, deploying, and optimizing ML/AI models",
+    "mlops/evaluation": "Model evaluation benchmarks, experiment tracking, data curation, tokenizers, and interpretability tools.",
+    "mlops/inference": "Model serving, quantization (GGUF/GPTQ), structured output, inference optimization, and model surgery tools for deploying and running LLMs.",
+    "mlops/models": "Specific model architectures and tools — image segmentation (Segment Anything / SAM) and audio generation (AudioCraft / MusicGen). Additional model skills (CLIP, Stable Diffusion, Whisper, LLaVA) are available as optional skills.",
+    "mlops/research": "ML research frameworks for building and optimizing AI systems with declarative programming.",
+    "mlops/training": "Fine-tuning, RLHF/DPO/GRPO training, distributed training frameworks, and optimization tools for training LLMs and other models.",
+    "mlops/vector-databases": "Vector similarity search and embedding databases for RAG, semantic search, and AI application backends.",
+    "note-taking": "Note taking skills, to save information, assist with research, and collab on multi-session planning and information sharing.",
+    "productivity": "Skills for document creation, presentations, spreadsheets, and other productivity workflows.",
+    "productivity/ocr-and-documents": "Skills for extracting text from PDFs, scanned documents, images, and other file formats using OCR and document parsing tools.",
+    "research": "Skills for academic research, paper discovery, literature review, domain reconnaissance, market data, content monitoring, and scientific knowledge retrieval.",
+    "smart-home": "Skills for controlling smart home devices — lights, switches, sensors, and home automation systems.",
+    "social-media": "Skills for interacting with social platforms and social-media workflows — posting, reading, monitoring, and account operations."
+  }
+}

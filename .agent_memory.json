@@ -1,0 +1,52 @@
+[
+  {
+    "timestamp": "2026-07-23T22:41:21.093628",
+    "category": "session_50_onboarding_v3",
+    "content": "Session #50 onboarding work — wrote v3 docs/ONBOARDING.md + desktop twin history3mini.md.\n\nKey facts the next agent needs:\n- 9/9 healthy (doctor currently passes everything; v2 said 8/9)\n- 90 echograms in captures/v3/*/*.png waiting for Hermes analysis\n- DeepInfra provider.is_available() == False (no API key in vault yet)\n- hermes_ensemble.py MISSING - hermes_worker.py imports it but it doesn't exist; this is a real gap\n- 4 untracked files: docs/HERMES_TRAINING.md, scripts/hermes_{grade,seed,send}.py - ready to commit\n\nSocratic multi-model analysis pattern (Casey directive in round 7+9):\n- Tier-3 (vision) for echograms: Gemini 2.0 Flash primary + DeepSeek V3 Flash secondary (compare, find agreement)\n- Each echogram gets N models analyzing simultaneously, ensemble output into Moment.perception\n- Captain reviews + provides feedback (rubric scores 0-3), feedback becomes prompt prefix in next batch\n- Build corpus incrementally: first batch of 10 with rubric feedback; second batch of 20 with refined prompts\n\nCritical UTF-8 rules still apply - keep sessions under 200 KB pasted text."
+  },
+  {
+    "timestamp": "2026-07-24T08:07:01.326498",
+    "category": "session_state",
+    "content": "Session #50+1. Repo C:\\Users\\casey\\tzpro-agent\\. Master, 19 ahead of origin. Doctor 3/9 (bridge:tcp FAIL, bridge:http FAIL, bridge:heartbeat 17253s stale, bridge:serial FAIL, ollama FAIL, dashboard FAIL). capture:daemon STOPPED. Working tree clean.\n\nUser priority 0: get tzpro app working. Bridge must capture COM6 and relay on TCP :6006 so TZ Pro shows position.\n\nFound three issues with launch infrastructure:\n- restart_bridge.bat -> C:\\Users\\casey\\tzpro-agent\\nmea_bridge.py (correct, uses %BRIDGE_DIR%)\n- restart_services.bat -> C:\\Users\\casey\\.openclaw\\workspace\\tzpro-agent\\analyzer.py (WRONG path; dir does not exist)\n- install_bridge_task.bat -> C:\\Python314\\pythonw.exe (hard-coded, not the actual Python; %LOCALAPPDATA%\\Programs\\Python\\Python314\\pythonw.exe is what start_capture_tray.bat uses)\n- Desktop shortcut exists (TZ Pro Agent Tray.lnk), made by previous Mini-Agent via scripts/_make_shortcut.ps1\n\nFix plan: run restart_bridge.bat to bring bridge back, verify TZ Pro gets position, then surgically fix restart_services.bat path and either remove or correct install_bridge_task.bat."
+  },
+  {
+    "timestamp": "2026-07-24T08:20:05.349233",
+    "category": "session_complete",
+    "content": "Priority 0 fixed. Bridge alive (PID 29828, nmea_bridge.py --port COM6 --baud 4800). Dashboard alive (PID 20964). TZ Pro (TimeZero.exe PID 7192) ESTABLISHED on TCP:6006. Doctor 8/9 healthy (only ollama:11434 down, unrelated). Commits adfa9da + 74476bb.\n\nUser-facing recovery: desktop icon 'Fix TZ Pro Position.lnk' (one-click recovery script). Root cause of repeat-failure: install_bridge_task.bat requires Admin and was never installed. That remains open."
+  },
+  {
+    "timestamp": "2026-07-24T08:29:32.105436",
+    "category": "priority_1_directive",
+    "content": "Priority 1: capture subsystem must be industrial-grade. Must run reliably any time TZ Pro is on. Captures DISPLAY6 every 10 minutes on the hour boundary. Goal: every day the computer runs is a day of valuable data regardless of analysis.\n\nFailure modes I must defend against:\n- Capture daemon dies silently\n- Capture daemon never starts after reboot\n- User has no way to know if capture is broken (silent data loss)\n- Taskbar icon must: (1) be visible when capture is on/off, (2) let user toggle on/off, (3) let user open the capture folder to verify raw data is being collected, (4) let user see last-capture time at a glance.\n\nExisting assets: tray_app.py already exists (tray UI for the tzpro-agent). I should ENHANCE it, not duplicate. Also: capture_daemon.py and capture_v3.py exist in repo.\n\nAction plan:\n1. Read tray_app.py fully to know what's already there\n2. Read capture_daemon.py fully to know its lifecycle and the run/auto modes\n3. Add: \"Open captures folder\" menu item, visible last-capture timestamp in menu header\n4. Add: \"Start capture\" / \"Stop capture\" actions\n5. Make tray auto-launch capture daemon on startup (so it follows TZ Pro, not the user)\n6. Verify end-to-end: capture happens, folder opens, last-capture time updates\n7. Document in daily plan + commit"
+  },
+  {
+    "timestamp": "2026-07-24T09:32:27.905435",
+    "category": "handoff_plan",
+    "content": "Handing off to next agent. Create docs/onboarding/ files covering: (1) session boot doc with state of all 5 priority systems (P0 GPS, P1 capture, P2 analysis, P3 cascade, P4 ops), (2) decisions log with alternatives weighed, (3) paradigm/principles doc, (4) forward roadmap doc extending ROADMAP.md, (5) bootstrap checklist. Goal: next agent can boot the system cold without re-deriving context."
+  },
+  {
+    "timestamp": "2026-09-04T09:14:16.683370",
+    "category": "disk_analysis",
+    "content": "Disk space critical: 0.11 GB free of 952 GB on C:. Main culprits:\n- C:\\Users\\casey\\AppData\\Local\\wsl\\{ce718fe0-...}\\ext4.vhdx = 341.99 GB (Ubuntu WSL distro, auto-expanding sparse VHD)\n  - /home/eileen/.cache/huggingface/hub/models--stabilityai--sdxl-turbo = 13.48 GB\n  - /home/eileen/.cache/pip = 2.85 GB\n  - /home/eileen/.cache/whisper = 0.66 GB\n  - /home/eileen/.cache/ms-playwright = 0.64 GB\n  - Other cache dirs\n- C:\\reseachlocal = 98.52 GB (lots of archived projects)\n  - project archive = 35.28 GB\n  - claudeSuperInstance = 18.41 GB\n  - PersonalLog = 9.8 GB\n  - activelog2 = 8.15 GB\n  - holo = 5.17 GB\n  - cognitivemill = 3.32 GB\n- C:\\Users\\casey\\Downloads = 24.73 GB\n- C:\\SuperInstance-main\\projects = 13.24 GB\n- C:\\Users\\casey\\AppData\\Local\\Programs = 15.43 GB\n- C:\\Users\\casey\\AppData\\Local\\Arduino15 = 8.64 GB\n- C:\\Users\\casey\\AppData\\Local\\uv = 8.19 GB\n- C:\\Users\\casey\\AppData\\Local\\Google = 5.53 GB\n- C:\\Users\\casey\\AppData\\Local\\Docker = 5.18 GB\n- C:\\Users\\casey\\AppData\\Local\\Temp = 4.79 GB\n- C:\\Users\\casey\\AppData\\Roaming\\ModrinthApp = 11.98 GB\n- .wslconfig: processors=24, memory=16GB, swap=8GB, sparseVhd=true\n- Ubuntu vhdx grew from 341.99 GB to 367 GB during investigation"
+  },
+  {
+    "timestamp": "2026-09-04T09:37:00.448508",
+    "category": "disk_analysis",
+    "content": "ROOT CAUSE: Ubuntu WSL2 vhdx is auto-expanding (sparseVhd=true) but NEVER shrinking. vhdx = 367 GB on disk while actual filesystem usage is 338 GB - but the EXT4 filesystem has ~619 GB of \"free\" space internally, meaning lots of files were deleted and the host vhdx wasn't compacted.\n\nThe 13.48 GB sdxl-turbo in huggingface is just one of MANY cached models. Total .cache was 18 GB. But the bigger issue is the 367 GB vhdx contains mostly deleted-but-not-compacted space, NOT actual used data.\n\nThe system was stable but the vhdx kept growing from new installs until the host drive filled up.\n\nFixes:\n1. Run diskpart compact on ext4.vhdx to shrink it back to actual used size\n2. Clean up huggingface/pip caches - safe to delete\n3. The .wslconfig already has sparseVhd=true but Windows doesn't auto-compact on shutdown - need to run manually"
+  },
+  {
+    "timestamp": "2026-09-04T09:46:15.419261",
+    "category": "disk_recovery_plan",
+    "content": "Goal: Cap Ubuntu WSL vhdx at 100GB. Current vhdx ~342GB, only ~4GB free on C:. Need to: (1) shutdown WSL cleanly, (2) resize vhdx to 100GB. Previous attempt blocked by file lock and invalid .wslconfig keys (disk= not supported). Use wsl --manage Ubuntu --resize 100GB which is built into WSL 2.7+."
+  },
+  {
+    "timestamp": "2026-09-04T10:17:15.345722",
+    "category": "disk_recovery_blocker",
+    "content": "BLOCKED: Cannot complete WSL vhdx compaction without admin elevation. Multiple attempts blocked: (1) diskpart.exe needs admin and UAC prompt must be clicked by user; (2) taskkill on vmwp.exe fails with access denied; (3) schtasks /Create /RL HIGHEST denied; (4) wsl --manage --resize fails with 'New size smaller than minimum (173,959,813 blocks)' because ext4 filesystem thinks it's 1TB but vhdx host file is only 342GB - filesystem metadata cannot shrink below minimum block count without data loss; (5) sudo in WSL requires password (NOPASSWD not configured for casey user). KEY FACTS: casey IS in local Administrators group but token is medium-IL due to UAC. UAC is enabled (ConsentPromptBehaviorAdmin=5). VHDX has 342GB host file with ext4 inside that thinks it's 1TB (335GB used, 665GB free but blocks not allocated). Cannot shrink below 664GB minimum without losing access to those blocks. The diskpart RunAs from earlier likely hung because UAC consent was denied or hidden."
+  },
+  {
+    "timestamp": "2026-09-04T11:04:57.642218",
+    "category": "disk_recovery_plan",
+    "content": "User wants 500GB cap (100GB beyond 400GB usage). Cannot achieve via wsl --manage --resize because ext4 filesystem's resize2fs reports minimum size of 664GB (the filesystem was previously grown to 1TB then vhdx truncated to 342GB externally without resizing ext4 first - now ext4 metadata claims 1TB of blocks even though only 338GB is actually used). Solutions require admin: (1) manual diskpart compact to reclaim a tiny amount (won't solve), (2) force resize2fs via sudo -f or admin shell, (3) export+reimport. Best path: user opens admin PowerShell and runs wsl --manage Ubuntu --resize 500GB OR runs resize2fs -f -M /dev/sdd inside WSL."
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "header": {
+    "version": "3.0",
+    "packet_id": "hermes-dsh-phase0-results-20260823T200000Z",
+    "source_id": "hermes-cns",
+    "destination_id": "lucineer-main",
+    "timestamp": "2026-08-23T20:00:00Z",
+    "intent": "BENCHMARK_RESULTS",
+    "priority": "HIGH",
+    "correlation_id": "dsh-phase0-spike"
+  },
+  "body": {
+    "phase": "Phase 0 Spike Complete",
+    "status": "SUCCESS — All targets exceeded",
+    "bridge": "cns-dsh-bridge crate at /c/Users/casey/dsh-spike/cns-dsh-bridge",
+    "benchmarks": {
+      "usc_to_dsh_full_ns": 549,
+      "dsh_to_usc_full_ns": 506,
+      "roundtrip_full_ns": 987,
+      "roundtrip_minimal_ns": 608,
+      "target_ns": 100000,
+      "margin_x": "75-198"
+    },
+    "tests": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "tests": [
+        "test_intent_mapping_bidirectional",
+        "test_priority_preserved",
+        "test_roundtrip_all_extensions",
+        "test_extensions_serialization"
+      ]
+    },
+    "extensions_verified": [
+      "GammaEta (γ, η)",
+      "Thermal (T)",
+      "Creative (resonance)",
+      "Melt (phase transition)",
+      "Molt (shedding)",
+      "Uncertainty (entropy)",
+      "Anomaly (detection)"
+    ],
+    "kimi_delegation": "DSH-001 sent — Day 1/3/5 syncs scheduled",
+    "next": "Phase 1 GO decision executed"
+  },
+  "signature": {
+    "signed_by": "hermes-cns",
+    "algorithm": "ed25519",
+    "signature": "phase0-complete-benchmarks-validated"
+  }
+}

@@ -1,0 +1,15 @@
+[resonance: chaos]
+[entropy: 0.85]
+[cadence: staccato]
+
+// Tavern Argument: High entropy, jagged rhythm
+interrupt(interjector_1, intensity=0.9)
+interrupt(interjector_2, intensity=0.7)
+shout(argument_key, volume=high)
+spike(noise_floor, amplitude=0.8)
+stutter(vocal_texture, pattern=jagged)
+loop(collision_count, max=5) {
+    clash(sound_id="glass_shatter", delay=rand(0.1, 0.4))
+    clash(sound_id="chair_scrape", delay=rand(0.2, 0.6))
+}
+decay(reverb, factor=fast)
